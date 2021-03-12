@@ -1,0 +1,28 @@
+From 897af317ce0063bf023b7c1371b51187d78d2951 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mathieu=20Dupr=C3=A9?= <mathieu.dupre@savoirfairelinux.com>
+Date: Fri, 12 Feb 2021 12:06:47 +0100
+Subject: [PATCH 1/5] Makefile.am: disable man pages generation
+
+Yocto to not provide the pod2man binary need by Jami to generate man
+pages. Furthermore, there is no need to generate man pages in an
+embedded context.
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 7798cd371..873b5d4a3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -6,7 +6,7 @@ SOURCES=
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = src ringtones man doc bin test
++SUBDIRS = src ringtones doc bin test
+ 
+ EXTRA_DIST = m4/libtool.m4 \
+ 			 m4/lt~obsolete.m4 \
+-- 
+2.29.2
+
