@@ -7,6 +7,7 @@ JAMI_QT_REV = "ae21c17da5e8f730ae3895ccbc4da8047e3be1eb"
 
 SRC_URI = " \
     git://review.jami.net/jami-client-qt;protocol=https;nobranch=1;rev=${JAMI_QT_REV} \
+    file://0001-previewrenderer-disconnect-signals-on-destroy.patch \
 "
 
 S = "${WORKDIR}/git/"
