@@ -1,0 +1,67 @@
+From be8487b88ed4463e01446e33c1f895aa3b4865ec Mon Sep 17 00:00:00 2001
+From: klhopital <kevin.lhopital@savoirfairelinux.com>
+Date: Wed, 7 Apr 2021 17:15:12 +0200
+Subject: [PATCH] Makefile: replace cp with install
+
+Replace cp with install to avoid a bitbake UID error in yocto.
+---
+ Makefile | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index fb0fa3aab..dea360f81 100644
+--- a/Makefile
++++ b/Makefile
+@@ -10,6 +10,33 @@ ifdef MINSIZE
+ MAKE_FLAGS := MINSIZE=1
+ endif
+ 
++define install_func_dir
++	for file in $(1); do \
++		if [ -f "$$file" ]; then \
++			DIR=$$(basename $$(dirname "$$file")); \
++			FILE=$$(basename "$$file"); \
++			install -Dm 644 "$$file" $(2)$$DIR/$$FILE; \
++		elif [ -d "$$file" ]; then \
++			PREV_DIR=$$DIR; \
++			DIR_=$$(basename "$$file"); \
++			for file in $$file/* ; do \
++				FILE_=$$(basename "$$file"); \
++				install -D "$$file" $(2)$$PREV_DIR/$$DIR_/$$FILE_; \
++			done; \
++		fi; \
++	done
++endef
++
++define install_func
++	for file in $(1); do \
++		if [ -f "$$file" ]; then \
++			install -m 644 "$$file" $(2)$$(basename "$$file"); \
++		elif [ -d "$$file" ]; then \
++			$(call install_func_dir,$$file/*,$(2)); \
++		fi; \
++	done
++endef
++
+ all clean dep depend print:
+ 	for dir in $(DIRS); do \
+ 		if $(MAKE) $(MAKE_FLAGS) -C $$dir $@; then \
+@@ -119,10 +146,13 @@ pjsua-test:
+ install:
+ 	mkdir -p $(DESTDIR)$(libdir)/
+ #	cp -af $(APP_LIB_FILES) $(DESTDIR)$(libdir)/
+-	cp -af $(APP_LIBXX_FILES) $(DESTDIR)$(libdir)/
++	install -m 755 $(APP_LIBXX_FILES) $(DESTDIR)$(libdir)/
++	for file in `find $(DESTDIR)$(libdir)/ -name "*.so" -printf "%f\n"`; do \
++		ln -sf "$$file".2 $(DESTDIR)$(libdir)/$$file; \
++	done
+ 	mkdir -p $(DESTDIR)$(includedir)/
+ 	for d in pjlib pjlib-util pjnath pjmedia pjsip; do \
+-		cp -RLf $$d/include/* $(DESTDIR)$(includedir)/; \
++		$(call install_func,$$d/include/*,$(DESTDIR)$(includedir)/); \
+ 	done
+ 	mkdir -p $(DESTDIR)$(libdir)/pkgconfig
+ 	sed -e "s!@PREFIX@!$(prefix)!" libpjproject.pc.in | \
+-- 
+2.30.2
+

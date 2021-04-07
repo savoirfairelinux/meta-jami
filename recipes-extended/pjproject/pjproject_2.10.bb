@@ -37,6 +37,7 @@ SRC_URI = " \
     file://0014-Add-new-compile-time-setting-PJ_ICE_ST_USE_TURN_PERM.patch \
     file://0015-update-local-preference-for-peer-reflexive-candidate.patch \
     file://0016-use-addrinfo-instead-CFHOST.patch \
+    file://0017-Makefile-replace-cp-with-install.patch \
 "
 
 SRC_URI[sha256sum] = "936a4c5b98601b52325463a397ddf11ab4106c6a7b04f8dc7cdd377efbb597de"
