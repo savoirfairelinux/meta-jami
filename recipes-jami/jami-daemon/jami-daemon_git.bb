@@ -23,6 +23,7 @@ DEPENDS += " \
     yaml-cpp \
     pulseaudio \
     libdbus-c++ \
+    libdbus-c++-native \
     speex \
     speexdsp \
     libsecp256k1 \
@@ -36,11 +37,6 @@ RDEPENDS-${PN} += " \
     pulseaudio-server \
     yaml-cpp \
 "
-
-# Workaround Workaround to avoid having to create a native dbus-c++ package.
-do_configure_prepend() {
-    ln -sf /usr/bin/dbusxx-xml2cpp ${RECIPE_SYSROOT_NATIVE}/usr/bin/dbusxx-xml2cpp
-}
 
 do_configure_append() {
     if [ ! -e libtool ] ; then
