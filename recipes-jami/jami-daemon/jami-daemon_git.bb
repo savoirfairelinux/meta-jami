@@ -48,7 +48,6 @@ FILES_${PN} += " \
     ${datadir}/ring/ringtones/* \
     ${datadir}/dbus-1/services/cx.ring.Ring.service \
     ${libdir}/ring/dring \
-    ${sysconfdir}/default/dring \
 "
 FILES_${PN}-dev += " \
     ${datadir}/dbus-1/interfaces/* \
