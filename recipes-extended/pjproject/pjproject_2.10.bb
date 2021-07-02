@@ -89,3 +89,5 @@ do_install_append() {
     # remove the fdebug-prefix-map options
     sed -i 's:\-fdebug-prefix-map[a-zA-Z0-9\._\/=\-]*::g' ${D}/usr/lib/pkgconfig/libpjproject.pc
 }
+
+INSANE_SKIP_${PN} = "ldflags"
