@@ -5,7 +5,7 @@ LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "https://github.com/savoirfairelinux/${BPN}/archive/${PV}.tar.gz"
-SRC_URI[sha256sum] = "917e5f691199349d6884a68c26645840914c18e72b2e21d97817618ddc55fb81"
+SRC_URI[sha256sum] = "5ca454e0606227685b146f519964bab97e5d593909f65bc9c3940750a182891f"
 
 S = "${WORKDIR}/${PN}-${PV}"
 
