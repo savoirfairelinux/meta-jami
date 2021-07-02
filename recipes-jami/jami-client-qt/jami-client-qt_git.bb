@@ -10,7 +10,7 @@ SRC_URI = " \
     file://0001-previewrenderer-disconnect-signals-on-destroy.patch \
 "
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 inherit cmake_qt5 systemd
 
 EXTRA_OECMAKE = "\
