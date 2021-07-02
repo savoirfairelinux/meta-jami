@@ -1,0 +1,22 @@
+From f30f50e71b3caf4da3dbea8a35ccb7e86b26ad3f Mon Sep 17 00:00:00 2001
+From: Derick Vigne <derickvigne@me.com>
+Date: Tue, 26 Jan 2021 14:59:12 -0500
+Subject: [PATCH] Fixed pkg-config Version
+
+---
+ pkg-config/jsoncpp.pc.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pkg-config/jsoncpp.pc.in b/pkg-config/jsoncpp.pc.in
+index 632a377f..2a222106 100644
+--- a/pkg-config/jsoncpp.pc.in
++++ b/pkg-config/jsoncpp.pc.in
+@@ -5,7 +5,7 @@ includedir=@includedir_for_pc_file@
+ 
+ Name: jsoncpp
+ Description: A C++ library for interacting with JSON
+-Version: @JSONCPP_VERSION@
++Version: @PROJECT_VERSION@
+ URL: https://github.com/open-source-parsers/jsoncpp
+ Libs: -L${libdir} -ljsoncpp
+ Cflags: -I${includedir}
