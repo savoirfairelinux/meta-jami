@@ -17,12 +17,12 @@ This layer depends on:
 
 URI: git://github.com/openembedded/openembedded-core.git
 branch: master
-revision: 10221e578ffb3551ccefe15a523ceba0d289c086
+revision: 8042ad9ca91ddaaf741366e1068c63c284ff98f5
 prio: default
 
 URI: git://github.com/openembedded/meta-openembedded.git
 branch: master
-revision: 698748c1538ed03efbcfdd936cf8317b4f138c29
+revision: 73d5cd5e8d9d8a922b6a8a9d90adf0470a99314e
 layers: meta-oe
         meta-networking
         meta-multimedia
@@ -30,12 +30,12 @@ prio: default
 
 URI: git://github.com/meta-qt5/meta-qt5.git
 branch: master
-revision: 7a9f639fbd632dbe23af95c7b8123a0b907c6179
+revision: aa96d3b978d63caeaaf5294b0171506c89cb7eba
 prio: default
 
 URI: git://git.openembedded.org/meta-python2
 branch: master
-revision: c43c29e57f16af4e77441b201855321fbd546661
+revision: 8db9e4f6ceae33d7a4f55453d31e69f9858af4eb
 prio: default
 
 Community / Colaboration
