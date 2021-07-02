@@ -3,7 +3,7 @@ LICENSE = "GPL-3.0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
 
-DRING_REV = "924cd61091de766f78390dab588b6413696db70a"
+DRING_REV = "8ff641af670d158935de6304280e8391b2a45810"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
@@ -28,6 +28,8 @@ DEPENDS += " \
     speexdsp \
     libsecp256k1 \
     libupnp \
+    libgit2 \
+    webrtc-audio-processing \
 "
 
 RDEPENDS-${PN} += " \
@@ -45,9 +47,8 @@ do_configure_append() {
 }
 
 FILES_${PN} += " \
-    ${datadir}/ring/ringtones/* \
+    ${datadir}/jami/ringtones/* \
     ${datadir}/dbus-1/services/cx.ring.Ring.service \
-    ${libdir}/ring/dring \
 "
 FILES_${PN}-dev += " \
     ${datadir}/dbus-1/interfaces/* \
