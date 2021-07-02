@@ -3,7 +3,7 @@ LICENSE = "LGPL-2.1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=14247b9fda5b3eaef1568f099dac2e0a"
 
-LRC_REV = "f354e8b212b49f871fb4540e56f9cb8e664c261b"
+LRC_REV = "cf359be9d0dbc5e73a0b31e2f519acdaa2f6aec0"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
