@@ -3,11 +3,10 @@ LICENSE = "GPL-3.0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-JAMI_QT_REV = "ae21c17da5e8f730ae3895ccbc4da8047e3be1eb"
+JAMI_QT_REV = "32a8978ff1fba9175cd3db67b8fbde21ac320b72"
 
 SRC_URI = " \
     git://review.jami.net/jami-client-qt;protocol=https;nobranch=1;rev=${JAMI_QT_REV} \
-    file://0001-previewrenderer-disconnect-signals-on-destroy.patch \
 "
 
 S = "${WORKDIR}/git"
