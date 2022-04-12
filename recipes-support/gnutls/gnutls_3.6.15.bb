@@ -2,11 +2,11 @@ SUMMARY = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 
-LICENSE = "GPLv3+ & LGPLv2.1+"
-LICENSE:${PN} = "LGPLv2.1+"
-LICENSE:${PN}-xx = "LGPLv2.1+"
-LICENSE:${PN}-bin = "GPLv3+"
-LICENSE:${PN}-openssl = "GPLv3+"
+LICENSE = "GPL-3.0-or-later & LGPL-2.1-or-later"
+LICENSE:${PN} = "LGPL-2.1-or-later"
+LICENSE:${PN}-xx = "LGPL-2.1-or-later"
+LICENSE:${PN}-bin = "GPL-3.0-or-later"
+LICENSE:${PN}-OpenSSL = "GPL-3.0-or-later"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=71391c8e0c1cfe68077e7fce3b586283 \
                     file://doc/COPYING;md5=c678957b0c8e964aa6c70fd77641a71e \

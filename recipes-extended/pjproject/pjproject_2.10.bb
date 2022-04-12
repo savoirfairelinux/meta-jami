@@ -7,7 +7,7 @@ DESCRIPTION = "Open source SIP stack and media stack for presence, im/instant \
 SECTION = "libs"
 HOMEPAGE = "http://www.pjsip.org/"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 

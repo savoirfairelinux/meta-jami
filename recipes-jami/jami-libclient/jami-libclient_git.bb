@@ -1,5 +1,5 @@
 SUMMARY = "Jami libclient"
-LICENSE = "LGPL-2.1"
+LICENSE = "LGPL-2.1-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=14247b9fda5b3eaef1568f099dac2e0a"
 
