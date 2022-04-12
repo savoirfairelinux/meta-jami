@@ -15,27 +15,32 @@ Dependencies
 ------------
 This layer depends on:
 
+URI: git@github.com:openembedded/bitbake.git
+branch: master
+revision: f1c4ac816e927f490fb9852c12aa408e8c9403b1
+prio: default
+
 URI: git://github.com/openembedded/openembedded-core.git
 branch: master
-revision: 8042ad9ca91ddaaf741366e1068c63c284ff98f5
+revision: d1849a1facd64fa0bcf8336a0ed5fbf71b2e3cb5
 prio: default
 
 URI: git://github.com/openembedded/meta-openembedded.git
 branch: master
-revision: 73d5cd5e8d9d8a922b6a8a9d90adf0470a99314e
+revision: fe149bbb3689c3ed83eddfec46c9a54e86308cb9
 layers: meta-oe
         meta-networking
         meta-multimedia
 prio: default
 
-URI: git://github.com/meta-qt5/meta-qt5.git
-branch: master
-revision: aa96d3b978d63caeaaf5294b0171506c89cb7eba
+URI: git://code.qt.io/yocto/meta-qt6.git
+branch: 6.2.4
+revision: f52e491cd9e56d0fc653fb32db1ccf78710e92dc
 prio: default
 
 URI: git://git.openembedded.org/meta-python2
 branch: master
-revision: 8db9e4f6ceae33d7a4f55453d31e69f9858af4eb
+revision: f02882e2aa9279ca7becca8d0cedbffe88b5a253
 prio: default
 
 Community / Colaboration
