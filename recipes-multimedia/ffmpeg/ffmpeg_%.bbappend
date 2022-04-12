@@ -1,5 +1,5 @@
 DEPENDS += "libopus"
 
-EXTRA_OECONF_append += " \
+EXTRA_OECONF:append = " \
         --enable-libopus \
         "

@@ -3,7 +3,7 @@ LICENSE = "GPL-3.0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
 
-JAMID_REV = "e3240d578142da19ae92f03ec09fb889c8b5fe77"
+JAMID_REV = "dca2eaaa4bb672e3e7c2f69ad02c88c0af15c9a2"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
@@ -32,7 +32,7 @@ DEPENDS += " \
     webrtc-audio-processing \
 "
 
-RDEPENDS-${PN} += " \
+RDEPENDS:${PN} += " \
     opendht \
     ffmpeg \
     libarchive \
@@ -40,16 +40,16 @@ RDEPENDS-${PN} += " \
     yaml-cpp \
 "
 
-do_configure_append() {
+do_configure:append() {
     if [ ! -e libtool ] ; then
         ln -s ${HOST_PREFIX}libtool libtool
     fi
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${datadir}/jami/ringtones/* \
     ${datadir}/dbus-1/services/cx.ring.Ring.service \
 "
-FILES_${PN}-dev += " \
+FILES:${PN}-dev += " \
     ${datadir}/dbus-1/interfaces/* \
 "

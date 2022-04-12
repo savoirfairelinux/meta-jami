@@ -1,0 +1,33 @@
+From 28a2fc45d5543696acd37f6c50cfda991a5f17d8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?=
+ <kevin.lhopital@savoirfairelinux.com>
+Date: Wed, 6 Apr 2022 17:00:52 +0200
+Subject: [PATCH] mainapplication: fix qFatal syntax
+
+The compilation of jami-client-qt resulting in the error:
+src/mainapplication.cpp:106:15:
+error: format not a string literal and no format arguments
+[-Werror=format-security]
+qFatal(QString("Qt build version mismatch!(%1)").arg(QT_VERSION_STR).toLatin1());
+
+Fix the issue by specifying the format of the argument to print.
+---
+ src/mainapplication.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mainapplication.cpp b/src/mainapplication.cpp
+index 66318d4..8013352 100644
+--- a/src/mainapplication.cpp
++++ b/src/mainapplication.cpp
+@@ -103,7 +103,7 @@ MainApplication::MainApplication(int& argc, char** argv)
+     const char* qtVersion = qVersion();
+     qInfo() << "Using Qt runtime version:" << qtVersion;
+     if (strncmp(qtVersion, QT_VERSION_STR, strnlen(qtVersion, sizeof qtVersion)) != 0) {
+-        qFatal(QString("Qt build version mismatch!(%1)").arg(QT_VERSION_STR).toLatin1());
++        qFatal("%s",QString("Qt build version mismatch!(%1)").arg(QT_VERSION_STR).toLatin1());
+     }
+ 
+     parseArguments();
+-- 
+2.25.1
+

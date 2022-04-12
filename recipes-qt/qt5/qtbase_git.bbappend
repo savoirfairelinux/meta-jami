@@ -1,1 +1,1 @@
-PACKAGECONFIG_append = " dbus sql-sqlite gif"
+PACKAGECONFIG:append = " dbus sql-sqlite"

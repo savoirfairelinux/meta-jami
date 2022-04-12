@@ -20,7 +20,7 @@ inherit autotools-brokensep pkgconfig pythonnative
 PARALLEL_MAKE="-j 1"
 
 SRC_URI = " \
-    git://github.com/pjsip/pjproject.git;protocol=https;nobranch=1;rev=2.10 \
+    git://github.com/pjsip/pjproject.git;protocol=https;branch=master \
     file://0001-rfc6544.patch \
     file://0002-rfc2466.patch \
     file://0003-add-tcp-keep-alive.patch \
@@ -39,6 +39,8 @@ SRC_URI = " \
     file://0016-use-addrinfo-instead-CFHOST.patch \
     file://0017-Makefile-replace-cp-with-install.patch \
 "
+
+SRCREV = "3e7b75cb2e482baee58c1991bd2fa4fb06774e0d"
 
 SRC_URI[sha256sum] = "936a4c5b98601b52325463a397ddf11ab4106c6a7b04f8dc7cdd377efbb597de"
 
@@ -70,7 +72,7 @@ EXTRA_OECONF = " \
 
 EXTRA_OEMAKE = "EXCLUDE_APP=1"
 
-do_configure_prepend () {
+do_configure:prepend () {
     export LD="${CC}"
     # Force compiling with position independent code and compile in release mode
     # without asserts
@@ -80,7 +82,7 @@ do_configure_prepend () {
     autoconf -o configure aconfigure.ac
 }
 
-do_install_append() {
+do_install:append() {
     # Do not install static libraries
     rm -vf ${D}${libdir}/*.a
 
@@ -90,4 +92,4 @@ do_install_append() {
     sed -i 's:\-fdebug-prefix-map[a-zA-Z0-9\._\/=\-]*::g' ${D}/usr/lib/pkgconfig/libpjproject.pc
 }
 
-INSANE_SKIP_${PN} = "ldflags"
+INSANE_SKIP:${PN} = "ldflags"

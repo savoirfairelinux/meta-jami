@@ -1,0 +1,31 @@
+From 0508628f6ba644e2f4c7b2018ad33c0481857ed1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?=
+ <kevin.lhopital@savoirfairelinux.com>
+Date: Tue, 5 Apr 2022 16:58:28 +0200
+Subject: [PATCH] host: fix compilation dependencies
+
+QtWebengine wasn't able to get the compilation dependencies path in
+Yocto. Then add manually the compilation dependencies in CMakeLists.txt
+---
+ src/CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 31123d06c..0266fb5bc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -171,6 +171,11 @@ if(CMAKE_CROSSCOMPILING AND NOT IOS)
+                    -DCMAKE_CXX_FLAGS=
+                    -DQT_FEATURE_qtwebengine_build=${QT_FEATURE_qtwebengine_build}
+                    -DQT_FEATURE_qtpdf_build=${QT_FEATURE_qtpdf_build}
++                   -DCMAKE_PREFIX_PATH=${QT_HOST_PATH}/lib/cmake
++                   -DQt6_DIR=${QT_HOST_PATH}/lib/cmake/Qt6
++                   -DQt6BuildInternals_DIR=${QT_HOST_PATH}/lib/cmake/Qt6BuildInternals
++                   -DQt6Core_DIR=${QT_HOST_PATH}/lib/cmake/Qt6Core
++                   -DQt6CoreTools_DIR=${QT_HOST_PATH}/lib/cmake/Qt6CoreTools
+     )
+     if(QT_FEATURE_qtwebengine_build)
+         add_dependencies(run_core_GnReady hostBuild)
+-- 
+2.25.1
+

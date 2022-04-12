@@ -4,10 +4,11 @@ LICENSE = "GPL-3.0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "https://github.com/savoirfairelinux/${BPN}/archive/${PV}.tar.gz"
-SRC_URI[sha256sum] = "9a75db4f119761d6524964b27d3a49aa809a6cb08bde963edc2f338458433c78"
+SRC_URI = "git://github.com/savoirfairelinux/opendht.git;branch=master;protocol=https"
 
-S = "${WORKDIR}/${PN}-${PV}"
+SRCREV = "e6768edaf0d11d76684faa40c208884778baafaf"
+
+S = "${WORKDIR}/git"
 
 DEPENDS = " \
     fmt \
@@ -20,8 +21,10 @@ DEPENDS = " \
     jsoncpp \
     msgpack-c \
     nettle \
+    pkgconfig-native \
+    msgpack-cpp \
 "
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     fmt \
     asio \
     zlib \
