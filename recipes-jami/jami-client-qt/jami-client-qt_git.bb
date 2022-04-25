@@ -50,6 +50,7 @@ RDEPENDS:${PN} = " \
     qt5compat \
     qtmultimedia \
     qtnetworkauth \
+    ca-certificates \
     "
 
 FILES:${PN} += " \
