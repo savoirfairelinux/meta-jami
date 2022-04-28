@@ -3,7 +3,7 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
 
-JAMID_REV = "dca2eaaa4bb672e3e7c2f69ad02c88c0af15c9a2"
+JAMID_REV = "8750049b0ce58133b05c90330df6fd3464dadd1d"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
@@ -39,6 +39,8 @@ RDEPENDS:${PN} += " \
     pulseaudio-server \
     yaml-cpp \
 "
+
+LD_FLAGS += " -Wl,-Bsymbolic"
 
 do_configure:append() {
     if [ ! -e libtool ] ; then

@@ -3,13 +3,13 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-JAMI_QT_REV = "302f7000710f12f419798dc1cb7a17f10d781bd4"
+JAMI_QT_REV = "3f88ceda932f6e3a41be28dca63f7ba0e9e761ad"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
 SRC_URI = " \
     ${JAMI_URI}/jami-client-qt;${JAMI_PROT};rev=${JAMI_QT_REV} \
-    file://0001-mainapplication-fix-qFatal-syntax.patch \
+    file://0001-remove-positioning.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -17,6 +17,7 @@ inherit qt6-cmake systemd
 
 EXTRA_OECMAKE = "\
     -DLRC=${STAGING_DIR_TARGET}/usr \
+    -DWITH_WEBENGINE=false \
 "
 
 DEPENDS += " \
@@ -24,8 +25,6 @@ DEPENDS += " \
     qttools-native \
     qtdeclarative \
     qtsvg \
-    qtwebengine \
-    qtwebchannel \
     jami-libclient \
     networkmanager \
     qrencode \
@@ -38,9 +37,6 @@ RDEPENDS:${PN} = " \
     qtbase \
     qtdeclarative \
     qtsvg \
-    qtwebengine \
-    qtwebengine-tools \
-    qtwebchannel \
     networkmanager \
     qrencode \
     jami-daemon \

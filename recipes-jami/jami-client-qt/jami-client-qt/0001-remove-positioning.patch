@@ -1,0 +1,46 @@
+ CMakeLists.txt                                |  2 +-
+ INSTALL.md     | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed4ecddc..d9732cfe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,12 +37,12 @@ set(QT_MODULES
+     Gui
+     Qml
+     QmlModels
+-    Positioning
+     Sql
+     Concurrent
+     Core
+     Core5Compat
+     Multimedia
++    Widgets
+ )
+
+ if(NOT DEFINED WITH_WEBENGINE)
+diff --git a/INSTALL.md b/INSTALL.md
+index 8066c4a5..d32406c8 100644
+--- a/INSTALL.md
++++ b/INSTALL.md
+@@ -136,7 +136,6 @@ Only 64-bit MSVC build can be compiled.
+   - Additional Libraries
+     - Qt Multimedia
+     - Qt Network Authorization
+-    - Qt Positioning
+     - Qt WebChannel
+     - Qt WebEngine
+     - Qt WebSockets
+diff --git a/src/utils.h b/src/utils.h
+index 34cb91a6..a4e6ac8d 100644
+--- a/src/utils.h
++++ b/src/utils.h
+@@ -26,7 +26,6 @@
+ #include <QDir>
+
+ #include <QImage>
+-#include <QItemDelegate>
+ #include <QLabel>
+ #include <QListWidget>
+ #include <QMessageBox>
