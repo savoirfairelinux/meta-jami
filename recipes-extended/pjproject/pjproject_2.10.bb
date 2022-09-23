@@ -15,7 +15,7 @@ DEPENDS = "gnutls"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep pkgconfig pythonnative
+inherit autotools-brokensep pkgconfig python3native
 
 PARALLEL_MAKE="-j 1"
 
