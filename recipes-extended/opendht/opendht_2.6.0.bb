@@ -6,36 +6,37 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "git://github.com/savoirfairelinux/opendht.git;branch=master;protocol=https"
 
-SRCREV = "e6768edaf0d11d76684faa40c208884778baafaf"
+SRCREV = "7383e3ea29156ae1f677a7250b3ba18969e78bb2"
 
 S = "${WORKDIR}/git"
 
 DEPENDS = " \
-    fmt \
     asio \
-    http-parser \
-    restinio \
-    libargon2 \
-    openssl \
+    cppunit \
+    fmt \
     gnutls \
+    http-parser \
     jsoncpp \
+    libargon2 \
     msgpack-c \
-    nettle \
-    pkgconfig-native \
     msgpack-cpp \
+    nettle \
+    openssl \
+    pkgconfig-native \
+    restinio \
 "
 RDEPENDS:${PN} = " \
-    fmt \
     asio \
-    zlib \
+    fmt \
+    gnutls \
+    gnutls \
     http-parser \
-    libargon2 \
-    openssl \
-    gnutls \
     jsoncpp \
-    gnutls \
+    libargon2 \
     msgpack-c \
     nettle \
+    openssl \
+    zlib \
 "
 
 EXTRA_OECMAKE = " \
