@@ -3,39 +3,38 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
 
-JAMID_REV = "8750049b0ce58133b05c90330df6fd3464dadd1d"
+JAMID_REV = "e8b1209b3dad18eb6a3dba2cec4db78303b54fdc"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
 SRC_URI = " \
     ${JAMI_URI}/jami-daemon;${JAMI_PROT};rev=${JAMID_REV} \
-    file://0001-Makefile.am-disable-man-pages-generation.patch \
 "
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig systemd
 
 DEPENDS += " \
-    opendht \
     ffmpeg \
     libarchive \
-    pjproject \
-    yaml-cpp \
-    pulseaudio \
     libdbus-c++ \
     libdbus-c++-native \
-    speex \
-    speexdsp \
+    libgit2 \
     libsecp256k1 \
     libupnp \
-    libgit2 \
+    opendht \
+    pjproject \
+    pulseaudio \
+    speex \
+    speexdsp \
     webrtc-audio-processing \
+    yaml-cpp \
 "
 
 RDEPENDS:${PN} += " \
-    opendht \
     ffmpeg \
     libarchive \
+    opendht \
     pulseaudio-server \
     yaml-cpp \
 "
