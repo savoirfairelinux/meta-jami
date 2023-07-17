@@ -8,27 +8,49 @@ JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
 SRC_URI = " \
-    ${JAMI_URI}/jami-daemon;${JAMI_PROT};rev=${JAMID_REV} \
+        ${JAMI_URI}/jami-daemon;${JAMI_PROT};rev=${JAMID_REV} \
+        file://0001-Makefile.am-disable-man-pages-generation.patch \
 "
+
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig systemd
 
+EXTRA_OECMAKE = " \
+				-DJAMI_DBUS=false \
+				"
+
 DEPENDS += " \
+    asio \
     ffmpeg \
+    fmt \
+    gnutls \
+    jack \
     libarchive \
     libdbus-c++ \
     libdbus-c++-native \
     libgit2 \
     libsecp256k1 \
     libupnp \
+    liburcu \
+    lttng-ust \
+    minizip \
+    nettle \
+    opencv \
     opendht \
+    openssh \
+    openssl \
     pjproject \
     pulseaudio \
+    restinio \
+    sdbus-c++ \
+    sdbus-c++-tools-native \
     speex \
     speexdsp \
     webrtc-audio-processing \
+    x264 \
     yaml-cpp \
+    zlib \
 "
 
 RDEPENDS:${PN} += " \
