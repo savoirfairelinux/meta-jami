@@ -4,7 +4,7 @@ LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 JAMI_QT_REV = "b948646cbd201b023b18c9d5cc3d6cca45bba00c"
-JAMI_URI = "git://review.jami.net"
+JAMI_URI = "gitsm://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
 SRC_URI = " \
@@ -12,7 +12,7 @@ SRC_URI = " \
 "
 
 S = "${WORKDIR}/git"
-inherit qt6-cmake systemd autotools-brokensep pkgconfig
+inherit autotools-brokensep qt6-cmake systemd pkgconfig
 
 EXTRA_OECMAKE = "\
     -DLRC=${STAGING_DIR_TARGET}/usr \
@@ -47,6 +47,7 @@ DEPENDS += " \
     qtpositioning \
     qtsvg \
     qttools-native \
+    sdbus-c++-tools-native \
     speex \
     speexdsp \
     webrtc-audio-processing \
@@ -57,6 +58,7 @@ RDEPENDS:${PN} = " \
     bash \
     ca-certificates \
     ffmpeg \
+    jami-daemon \
     libarchive \
     networkmanager \
     opendht \
