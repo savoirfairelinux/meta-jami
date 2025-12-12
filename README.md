@@ -34,8 +34,8 @@ layers: meta-oe, meta-networking, meta-multimedia
 prio: default
 
 URI: git://code.qt.io/yocto/meta-qt6.git
-branch: 6.4
-revision: 24f23ee49a2c32be9d1b799a4616003c2ac53a21
+branch: 6.5
+revision: 9c6fe907d6287cac3c3f2895a7d4d87bf4d269b5
 prio: default
 
 Yocto version support
