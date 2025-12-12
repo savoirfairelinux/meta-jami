@@ -36,11 +36,6 @@ branch: 6.4
 revision: 24f23ee49a2c32be9d1b799a4616003c2ac53a21
 prio: default
 
-URI: git://git.openembedded.org/meta-python2
-branch: master
-revision: f02882e2aa9279ca7becca8d0cedbffe88b5a253
-prio: default
-
 Yocto version support
 ---------------------
 meta-jami is tested with the following Yocto branches:
