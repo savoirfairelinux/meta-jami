@@ -16,20 +16,20 @@ Dependencies
 This layer depends on:
 
 URI: git@github.com:openembedded/bitbake.git
-branch: 2.0
-tag: yocto-4.0.31
-revision: 8e2d1f8de055549b2101614d85454fcd1d0f94b2
+branch: 2.8
+tag: yocto-5.0.14
+revision: 8dcf084522b9c66a6639b5f117f554fde9b6b45a
 prio: default
 
 URI: git://github.com/openembedded/openembedded-core.git
-branch: kirkstone
-tag: yocto-4.0.31
-revision: 99204008786f659ab03538cd2ae2fd23ed4164c5
+branch: scarthgap
+tag: yocto-5.0.14
+revision: 471adaa5f77fa3b974eab60a2ded48e360042828
 prio: default
 
 URI: git://github.com/openembedded/meta-openembedded.git
-branch: kirkstone
-revision: 07ac1890c843b374c27e150f1a2e53ad3db2a8e4
+branch: scarthgap
+revision: 7ed4330bcf1ecd4aa34bfbe1fd7079381b62b1e7
 layers: meta-oe, meta-networking, meta-multimedia
 prio: default
 
