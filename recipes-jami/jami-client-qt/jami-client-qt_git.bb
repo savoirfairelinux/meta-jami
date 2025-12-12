@@ -23,7 +23,6 @@ EXTRA_OECMAKE = "\
 "
 
 DEPENDS += " \
-    cargo \
     doxygen-native \
     ffmpeg \
     jami-daemon \
