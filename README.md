@@ -17,17 +17,19 @@ This layer depends on:
 
 URI: git@github.com:openembedded/bitbake.git
 branch: 2.0
-revision: 907416ee1062f87f5844ab0638b54616abfc1a22
+tag: yocto-4.0.31
+revision: 8e2d1f8de055549b2101614d85454fcd1d0f94b2
 prio: default
 
 URI: git://github.com/openembedded/openembedded-core.git
 branch: kirkstone
-revision: f20a12ead2d5890e88e7f4ce149a777de47edc48
+tag: yocto-4.0.31
+revision: 99204008786f659ab03538cd2ae2fd23ed4164c5
 prio: default
 
 URI: git://github.com/openembedded/meta-openembedded.git
 branch: kirkstone
-revision: 346753705e49a2486867dc150181a1c7f4d69377
+revision: 07ac1890c843b374c27e150f1a2e53ad3db2a8e4
 layers: meta-oe, meta-networking, meta-multimedia
 prio: default
 
