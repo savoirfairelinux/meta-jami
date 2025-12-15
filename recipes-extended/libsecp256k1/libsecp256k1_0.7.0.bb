@@ -3,12 +3,9 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=67330c75f8bf6a92f6f8a36ae669ba74"
 
-GIT_REV = "0b7024185045a49a1a6a4c5615bf31c94f63d9c4"
-GIT_PROT = "protocol=https;nobranch=1"
+SRC_URI = "git://github.com/bitcoin-core/secp256k1.git;protocol=https;nobranch=1"
+SRCREV = "a660a4976efe880bae7982ee410b9e0dc59ac983"
 
-SRC_URI = " \
-    git://github.com/bitcoin-core/secp256k1.git;${GIT_PROT};rev=${GIT_REV} \
-"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
