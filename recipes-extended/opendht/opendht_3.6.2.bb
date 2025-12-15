@@ -1,12 +1,12 @@
 SUMMARY = "OpenDHT"
-DESCRIPTION = "A lightweight C++14 Distributed Hash Table implementation."
+DESCRIPTION = "A lightweight C++17 Distributed Hash Table implementation."
 LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "git://github.com/savoirfairelinux/opendht.git;branch=master;protocol=https"
 
-SRCREV = "7383e3ea29156ae1f677a7250b3ba18969e78bb2"
+SRCREV = "c60c6b8af2daff93dea0f8264c55cdff6b64a4f3"
 
 S = "${WORKDIR}/git"
 
@@ -15,6 +15,8 @@ DEPENDS = " \
     cppunit \
     fmt \
     gnutls \
+    simdutf \
+    llhttp \
     http-parser \
     jsoncpp \
     libargon2 \
@@ -29,7 +31,8 @@ RDEPENDS:${PN} = " \
     asio \
     fmt \
     gnutls \
-    gnutls \
+    llhttp \
+    simdutf \
     http-parser \
     jsoncpp \
     libargon2 \
