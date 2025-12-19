@@ -9,15 +9,14 @@ HOMEPAGE = "http://www.pjsip.org/"
 
 LICENSE = "GPL-2.0-or-later"
 
-PJPROJECT_REV = "e4b83585a0bdf1523e808a4fc1946ec82ac733d0"
+PJPROJECT_REV = "93dc96918bb6ba74e1e1d00c40c80402e856f2ac"
 PJPROJECT_URI = "git://review.jami.net/pjproject"
-PJPROJECT_PROT = "protocol=https;nobranch=1"
+PJPROJECT_PROT = "protocol=https;branch=sfl-2.15"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = " \
 					${PJPROJECT_URI};${PJPROJECT_PROT};rev=${PJPROJECT_REV} \
-					file://0009-add-config-site.patch \
 					file://0001-win-config.patch \
 					file://0002-win-vs-gnutls.patch \
 					"
