@@ -63,8 +63,6 @@ RDEPENDS:${PN} += " \
     yaml-cpp \
 "
 
-LD_FLAGS += " -Wl,-Bsymbolic"
-
 do_configure:append() {
     if [ ! -e libtool ] ; then
         ln -s ${HOST_PREFIX}libtool libtool
