@@ -1,9 +1,9 @@
 SUMMARY = "Jami daemon"
 LICENSE = "GPL-3.0-only"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=614d5aba617892f88a0f696f6d411149"
 
-JAMID_REV = "e8b1209b3dad18eb6a3dba2cec4db78303b54fdc"
+JAMID_REV = "d79fb875075d6130fd247806f70b08e4619d30f8"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
@@ -22,6 +22,7 @@ EXTRA_OECMAKE = " \
 
 DEPENDS += " \
     asio \
+    dhtnet \
     ffmpeg \
     fmt \
     gnutls \
@@ -54,6 +55,7 @@ DEPENDS += " \
 "
 
 RDEPENDS:${PN} += " \
+    dhtnet \
     ffmpeg \
     libarchive \
     opendht \
