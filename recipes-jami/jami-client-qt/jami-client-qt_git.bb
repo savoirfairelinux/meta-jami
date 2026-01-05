@@ -3,7 +3,7 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-JAMI_QT_REV = "b948646cbd201b023b18c9d5cc3d6cca45bba00c"
+JAMI_QT_REV = "8b6071e52f962940a554d7713ed5e948c5472ede"
 JAMI_URI = "gitsm://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
@@ -18,7 +18,8 @@ EXTRA_OECMAKE = "\
     -DLRC=${STAGING_DIR_TARGET}/usr \
     -DWITH_WEBENGINE=false \
     -DWITH_X11=false \
-    -DWITH_DAEMON_SUBMODULE=true \
+    -DWITH_DAEMON_SUBMODULE=false \
+    -DJAMICORE_AS_SUBDIR=OFF \
     -DENABLE_LIBWRAP=true \
 "
 
@@ -46,6 +47,7 @@ DEPENDS += " \
     qtpositioning \
     qtsvg \
     qttools-native \
+    qwindowkit \
     sdbus-c++-tools-native \
     speex \
     speexdsp \
@@ -69,6 +71,7 @@ RDEPENDS:${PN} = " \
     qtmultimedia \
     qtnetworkauth \
     qtsvg \
+    qwindowkit \
     ttf-bitstream-vera \
     yaml-cpp \
     "
