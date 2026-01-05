@@ -10,6 +10,7 @@ JAMI_PROT = "protocol=https;nobranch=1"
 SRC_URI = " \
         ${JAMI_URI}/jami-daemon;${JAMI_PROT};rev=${JAMID_REV} \
         file://0001-Makefile.am-disable-man-pages-generation.patch \
+        file://0002-configure.ac-reset-flags-only-if-building-contrib-di.patch \
 "
 
 S = "${WORKDIR}/git"

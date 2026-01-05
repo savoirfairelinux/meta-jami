@@ -1,0 +1,36 @@
+From e2972c2bcff08cd8b9c0a30501e830dedeb87513 Mon Sep 17 00:00:00 2001
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Date: Mon, 5 Jan 2026 16:14:48 +0100
+Subject: [PATCH] configure.ac: reset flags only if building contrib directory
+
+When building the dependencies in the contrib directory, CPPFLAGS and
+LDFLAGS are stored in temporary variables and restored after to not
+impact the jami-daemon build flags.
+However, this restoration was done unconditionally. If the contrib
+directory isn't used, the "restoration" would happen anyway deleting
+the flags given to the build system.
+
+Fix this as Yocto doesn't use the contrib directory.
+
+Upstream-Status: Pending
+---
+ configure.ac | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 055151670..5be40be99 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -623,8 +623,10 @@ AC_DEFUN([BB_ENABLE_DOXYGEN],
+ BB_ENABLE_DOXYGEN
+ 
+ dnl Reset the *user* variables to their initial values.
+-CPPFLAGS="$CPPFLAGS_SAVE"
+-LDFLAGS="$LDFLAGS_SAVE"
++AS_IF([test -n "${CONTRIB_DIR}"], [
++  CPPFLAGS="$CPPFLAGS_SAVE"
++  LDFLAGS="$LDFLAGS_SAVE"
++])
+ 
+ AC_CONFIG_FILES([Makefile \
+                  bin/Makefile \
