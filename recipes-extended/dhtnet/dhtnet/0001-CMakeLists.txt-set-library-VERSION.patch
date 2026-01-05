@@ -1,0 +1,31 @@
+From d0f31477ff8c21cdbfa4bdab97db9840874fd64d Mon Sep 17 00:00:00 2001
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Date: Mon, 5 Jan 2026 14:30:51 +0100
+Subject: [PATCH] CMakeLists.txt: set library VERSION
+
+When generating a .so shared library, if none of the VERSION and
+SOVERSION properties is defined CMake will only output the ".so" file.
+This triggers Yocto QA check errors during packaging, as it doesn't
+expect an unversioned .so file in the *-dev package.
+
+To prevent this, set the VERSION property, so that the regular shared
+library file has the format "*.so.*" and "*.so" is a symlink to the
+library file.
+
+Upstream-Status: Inappropriate [oe specific]
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 854ca1d..5c20bcd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -270,6 +270,7 @@ if (DHTNET_NATPMP)
+ endif()
+ 
+ add_library(dhtnet ${dhtnet_SOURCES})
++set_target_properties(dhtnet PROPERTIES VERSION ${VERSION})
+ if (NOT MSVC)
+     target_link_libraries(dhtnet PUBLIC PkgConfig::opendht PkgConfig::pjproject fmt::fmt ${MSGPACK_LIB})
+ else()

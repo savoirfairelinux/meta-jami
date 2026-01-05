@@ -3,7 +3,10 @@ SUMMARY = "DHTNet, a Lightweight Peer-to-Peer Communication Library"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c078891f53322564c490150e256305e8"
 
-SRC_URI = "git://github.com/savoirfairelinux/dhtnet.git;protocol=https;branch=master"
+SRC_URI = " \
+    git://github.com/savoirfairelinux/dhtnet.git;protocol=https;branch=master \
+    file://0001-CMakeLists.txt-set-library-VERSION.patch \
+"
 SRCREV = "6dd5a5e3eb15cebafa212e134ce436705c6d5fc5"
 
 S = "${WORKDIR}/git"
