@@ -41,7 +41,7 @@ prio: default
 Yocto version support
 ---------------------
 meta-jami is tested with the following Yocto branches:
-- kirkstone
+- scarthgap
 
 Community / Colaboration
 ------------------------
