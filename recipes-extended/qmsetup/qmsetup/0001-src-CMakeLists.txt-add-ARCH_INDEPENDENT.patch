@@ -1,0 +1,33 @@
+From 675c1bd9fcc76d54e0e6abbd66c9e2bcf89edc0e Mon Sep 17 00:00:00 2001
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Date: Tue, 6 Jan 2026 16:57:45 +0100
+Subject: [PATCH] src/CMakeLists.txt: add ARCH_INDEPENDENT
+
+qmsetup is a set of scripts and C/C++ libraries for use when running
+CMake projects, such as with qwindowkit. Therefore it is expected to
+produce executables and library only for the host machine.
+However, as a CMake package, it is included with find_package() in
+projects that may be cross-compiled. In such case, CMake will search packages
+for the target architecture.
+If the host and target architectures differ (32 vs 64 bits), then the qmsetup package
+won't be included.
+Setting ARCH_INDEPENDENT allows to include the package anyway.
+
+Upstream-Status: Inappropriate [oe specific]
+
+---
+ src/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7c4e81a..9e113c8 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -43,6 +43,7 @@ if(TRUE)
+         "${CMAKE_CURRENT_BINARY_DIR}/${QMSETUP_INSTALL_NAME}ConfigVersion.cmake"
+         VERSION ${QMSETUP_VERSION}
+         COMPATIBILITY AnyNewerVersion
++        ARCH_INDEPENDENT
+     )
+
+     # Add configuration file
