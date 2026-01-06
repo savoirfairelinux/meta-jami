@@ -14,7 +14,7 @@ SRC_URI = " \
 "
 
 S = "${WORKDIR}/git"
-inherit autotools-brokensep qt6-cmake systemd pkgconfig
+inherit qt6-cmake systemd pkgconfig
 
 EXTRA_OECMAKE = "\
     -DLRC=${STAGING_DIR_TARGET}/usr \
