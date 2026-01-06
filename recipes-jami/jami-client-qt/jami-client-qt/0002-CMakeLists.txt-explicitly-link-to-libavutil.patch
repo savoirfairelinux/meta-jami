@@ -1,0 +1,41 @@
+From b5bb6be2c4daf71674345259dc8d780a00e0cedf Mon Sep 17 00:00:00 2001
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Date: Tue, 6 Jan 2026 13:33:40 +0100
+Subject: [PATCH] CMakeLists.txt: explicitly link to libavutil
+
+Since commit [1], jami-client-qt CMakeLists.txt expects jami-daemon
+to be built using CMake.
+However, for now, the jami-daemon Yocto recipe still builds
+using autotools.
+
+As already explained in commit [2], not explicitly linking to libavutil
+result in a link error because linker expects jami-client-qt to directly
+link to libavutil instead of doing so through libjami.
+When jami-daemon is built with CMake, this link dependency is handled by
+CMake packages. But when it is built with autotools,
+jami-client-qt must re-introduce the explicit link.
+
+This commit partially revert [1].
+
+[1]: https://github.com/savoirfairelinux/jami-client-qt/commit/22be4be864f1187648f2fc4b4be11ba14a23082b
+[2]: https://github.com/savoirfairelinux/jami-client-qt/commit/730b00bd5d5c5744b460a0ff259b4629e8e07fc0
+
+Upstream-Status: Inappropriate [oe specific]
+---
+ CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aa9e5bc8..e16e44a8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -555,6 +555,9 @@ elseif (NOT APPLE)
+     add_definitions(${LIBGDKPIXBUF_CFLAGS})
+   endif()
+ 
++  pkg_check_modules(avutil REQUIRED IMPORTED_TARGET libavutil)
++  list(APPEND CLIENT_LIBS PkgConfig::avutil)
++
+   include_directories(
+     ${LIBCLIENT_SRC_DIR}
+     ${LIBNM_INCLUDE_DIRS}
