@@ -81,3 +81,6 @@ RDEPENDS:${PN} = " \
 FILES:${PN} += " \
         /usr/share/* \
         "
+do_install:append() {
+    rm ${D}${datadir}/applications/net.jami.Jami.desktop
+}
