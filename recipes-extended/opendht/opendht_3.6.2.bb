@@ -31,7 +31,6 @@ RDEPENDS:${PN} = " \
     asio \
     fmt \
     gnutls \
-    llhttp \
     simdutf \
     http-parser \
     jsoncpp \
