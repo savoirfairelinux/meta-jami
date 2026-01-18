@@ -1,9 +1,8 @@
-meta-jami
-=========
+# meta-jami
 
-This layer provides support for the open source communication platform Jami.
-Jami is a free and open source audio, video and text peer-to-peer communication
-platform. It does not require a server, and implements distributed and secure
+This layer provides support for the open-source communication platform Jami.
+Jami is a free and open-source audio, video, and text peer-to-peer communication
+platform. It does not require a server and implements distributed and secure
 end-to-end encrypted communications for multiple platforms.
 Website: https://jami.net/
 
@@ -11,8 +10,8 @@ To enable Jami, add jami-client-qt to your IMAGE_INSTALL.
 
         IMAGE_INSTALL += "jami-client-qt"
 
-Dependencies
-------------
+## Dependencies
+
 This layer depends on:
 
 URI: git@github.com:openembedded/bitbake.git
@@ -43,19 +42,16 @@ branch: master
 revision: f02882e2aa9279ca7becca8d0cedbffe88b5a253
 prio: default
 
-Community / Colaboration
-------------------------
+## Community/Collaboration
 
 Repository: https://github.com/savoirfairelinux/meta-jami
 
-Maintenance
------------
+## Maintenance
 
-Send pull requests, patches, comments or questions on GitHub.
+Send pull requests, patches, comments, or questions on GitHub.
 
-License
--------
+## License
 
 All metadata is GPL-3.0 licensed unless otherwise stated. Source code included
-in tree for individual recipes is under the LICENSE stated in each recipe
+in the tree for individual recipes is under the LICENSE stated in each recipe
 (.bb file) unless otherwise stated.
