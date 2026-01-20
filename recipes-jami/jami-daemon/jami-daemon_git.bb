@@ -3,12 +3,13 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=614d5aba617892f88a0f696f6d411149"
 
-JAMID_REV = "d79fb875075d6130fd247806f70b08e4619d30f8"
+JAMID_REV = "ca9504976ab63960caddd91f4a018f85a6dbcd01"
 JAMI_URI = "git://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 
 SRC_URI = " \
         ${JAMI_URI}/jami-daemon;${JAMI_PROT};rev=${JAMID_REV} \
+        file://0001-Revert-cleanup-remove-autotools.patch \
         file://0001-Makefile.am-disable-man-pages-generation.patch \
         file://0002-configure.ac-reset-flags-only-if-building-contrib-di.patch \
 "

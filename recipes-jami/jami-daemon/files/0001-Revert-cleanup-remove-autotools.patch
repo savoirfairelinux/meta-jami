@@ -1,0 +1,3964 @@
+From d272e0352faffc85260f08d88eefeaa8b0af7f74 Mon Sep 17 00:00:00 2001
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Date: Tue, 20 Jan 2026 10:02:02 +0100
+Subject: [PATCH] Revert "cleanup: remove autotools"
+
+This reverts commit 02c9fd587480b37973354cfe7842a326f75222ef.
+
+Temporarily reverts commit removing support for autotools build
+because the recipe wasn't yet tested with CMake. However, this should
+be temporary and migration to CMake should be done in a later commit.
+---
+ .gitignore                                   |   3 +-
+ AUTHORS                                      |  86 ++
+ CODING                                       |  27 +
+ ChangeLog                                    |   2 +
+ Makefile.am                                  |  43 +
+ README.md                                    |  22 +
+ autogen.sh                                   |  41 +
+ bin/Makefile.am                              |  29 +
+ bin/dbus/Makefile.am                         |  81 ++
+ bin/nodejs/Makefile.am                       |  19 +
+ configure.ac                                 | 624 ++++++++++++
+ doc/Makefile.am                              |   5 +
+ doc/doxygen/Makefile.am                      |  62 ++
+ globals.mk                                   |  23 +
+ m4/.gitignore                                |   5 +
+ m4/as-ac-expand.m4                           |  43 +
+ m4/ax_cxx_compile_stdcxx.m4                  | 951 +++++++++++++++++++
+ m4/ax_pthread.m4                             | 309 ++++++
+ man/Makefile.am                              |  19 +
+ ringtones/Makefile.am                        |  13 +
+ src/Makefile.am                              | 154 +++
+ src/client/Makefile.am                       |  25 +
+ src/config/Makefile.am                       |   8 +
+ src/connectivity/Makefile.am                 |  13 +
+ src/connectivity/security/Makefile.am        |  11 +
+ src/im/Makefile.am                           |   9 +
+ src/jamidht/Makefile.am                      |  63 ++
+ src/jamidht/eth/libdevcore/Makefile.am       |  14 +
+ src/jamidht/eth/libdevcrypto/Makefile.am     |   6 +
+ src/media/Makefile.am                        |  50 +
+ src/media/audio/Makefile.am                  |  77 ++
+ src/media/audio/alsa/Makefile.am             |   7 +
+ src/media/audio/audio-processing/Makefile.am |  24 +
+ src/media/audio/coreaudio/Makefile.am        |  23 +
+ src/media/audio/jack/Makefile.am             |   8 +
+ src/media/audio/opensl/Makefile.am           |  17 +
+ src/media/audio/portaudio/Makefile.am        |  11 +
+ src/media/audio/pulseaudio/Makefile.am       |  12 +
+ src/media/audio/sound/Makefile.am            |  17 +
+ src/media/video/Makefile.am                  |  73 ++
+ src/media/video/androidvideo/Makefile.am     |  10 +
+ src/media/video/iosvideo/Makefile.am         |  10 +
+ src/media/video/osxvideo/Makefile.am         |   9 +
+ src/media/video/v4l2/Makefile.am             |  23 +
+ src/media/video/winvideo/Makefile.am         |  11 +
+ src/plugin/Makefile.am                       |  35 +
+ src/sip/Makefile.am                          |  31 +
+ test/Makefile.am                             |   9 +
+ test/agent/Makefile.am                       |  53 ++
+ test/fuzzing/Makefile.am                     |  23 +
+ test/sip/Makefile.am                         |  10 +
+ test/unitTest/Makefile.am                    | 273 ++++++
+ 52 files changed, 3525 insertions(+), 1 deletion(-)
+ create mode 100644 AUTHORS
+ create mode 100644 CODING
+ create mode 100644 ChangeLog
+ create mode 100644 Makefile.am
+ create mode 100755 autogen.sh
+ create mode 100644 bin/Makefile.am
+ create mode 100644 bin/dbus/Makefile.am
+ create mode 100644 bin/nodejs/Makefile.am
+ create mode 100644 configure.ac
+ create mode 100644 doc/Makefile.am
+ create mode 100644 doc/doxygen/Makefile.am
+ create mode 100644 globals.mk
+ create mode 100644 m4/.gitignore
+ create mode 100644 m4/as-ac-expand.m4
+ create mode 100644 m4/ax_cxx_compile_stdcxx.m4
+ create mode 100644 m4/ax_pthread.m4
+ create mode 100644 man/Makefile.am
+ create mode 100644 ringtones/Makefile.am
+ create mode 100644 src/Makefile.am
+ create mode 100644 src/client/Makefile.am
+ create mode 100644 src/config/Makefile.am
+ create mode 100644 src/connectivity/Makefile.am
+ create mode 100644 src/connectivity/security/Makefile.am
+ create mode 100644 src/im/Makefile.am
+ create mode 100644 src/jamidht/Makefile.am
+ create mode 100644 src/jamidht/eth/libdevcore/Makefile.am
+ create mode 100644 src/jamidht/eth/libdevcrypto/Makefile.am
+ create mode 100644 src/media/Makefile.am
+ create mode 100644 src/media/audio/Makefile.am
+ create mode 100644 src/media/audio/alsa/Makefile.am
+ create mode 100644 src/media/audio/audio-processing/Makefile.am
+ create mode 100644 src/media/audio/coreaudio/Makefile.am
+ create mode 100644 src/media/audio/jack/Makefile.am
+ create mode 100644 src/media/audio/opensl/Makefile.am
+ create mode 100644 src/media/audio/portaudio/Makefile.am
+ create mode 100644 src/media/audio/pulseaudio/Makefile.am
+ create mode 100644 src/media/audio/sound/Makefile.am
+ create mode 100644 src/media/video/Makefile.am
+ create mode 100644 src/media/video/androidvideo/Makefile.am
+ create mode 100644 src/media/video/iosvideo/Makefile.am
+ create mode 100644 src/media/video/osxvideo/Makefile.am
+ create mode 100644 src/media/video/v4l2/Makefile.am
+ create mode 100644 src/media/video/winvideo/Makefile.am
+ create mode 100644 src/plugin/Makefile.am
+ create mode 100644 src/sip/Makefile.am
+ create mode 100644 test/Makefile.am
+ create mode 100644 test/agent/Makefile.am
+ create mode 100644 test/fuzzing/Makefile.am
+ create mode 100644 test/sip/Makefile.am
+ create mode 100644 test/unitTest/Makefile.am
+
+diff --git a/.gitignore b/.gitignore
+index f52fccf32..a0eb2a4a8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -19,7 +19,8 @@ Makefile
+ *.spec
+ *.yml.bak
+ 
+-
++aclocal.m4
++autom4te.cache
+ config.guess
+ config.*
+ depcomp
+diff --git a/AUTHORS b/AUTHORS
+new file mode 100644
+index 000000000..e57ef475a
+--- /dev/null
++++ b/AUTHORS
+@@ -0,0 +1,86 @@
++Current authors
++---------------
++
++Adrien Béraud <adrien dot beraud at savoirfairelinux dot com>
++Alexandre Lision <alexandre dot lision at savoirfairelinux dot com>
++Guillaume Roguez <guillaume dot roguez at savoirfairelinux dot com>
++Edric Milaret <edric dot ladent-milaret at savoirfairelinux dot com>
++Eloi BAIL <eloi dot bail at savoirfairelinux dot com>
++Emmanuel Lepage <emmanuel dot lepage at savoirfairelinux dot com>
++Stepan Salenikovich <stepan dot salenikovich at savoirfairelinux dot com>
++
++Former authors
++--------------
++
++Philippe Groarke <philippe.groarke@savoirfairelinux.com>
++	- audio fixes
++	- windows port startup
++
++Tristan Matthews <tristan dot matthews at savoirfairelinux dot com>
++	- Many portions of code
++
++Emmanuel Milou <emmanuel dot milou at savoirfairelinux dot com>
++	- ALSA implementation ( replaces portaudio )
++	- Dynamic loading of audio codecs ( shared libraries )
++	- Debian packages
++	- GTK client error handling
++	- Plus many portions of code in dring and sflphone-gtk
++	- Test and debugging
++
++Alexandre Savard <alexandre dot savard at savoirfairelinux dot com>
++
++Rafaël Carré <rafael dot carre at savoirfairelinux dot com>
++
++Vivien Didelot <vivien dot didelot at savoirfairelinux dot com>
++
++Alexandre Bourget <alexandre dot bourget at savoirfairelinux dot com>
++	- IAX implementation
++
++Guillaume Carmel-Archambault <guillaume.carmel-archambault at savoirfairelinux dot com>
++	- Presence
++	- Contacts
++Yun Liu <yun.liu at savoirfairelinux dot com>
++	- Change sip library to pjsip
++	- Support multiple accounts registration
++	- Add chinese translation
++	- Many portions of test and debugging
++
++Polytechnic School of Montreal:
++	- Jean-Francois Blanchard-Dionne <jean-francois.blanchard-dionne at polymtl dot ca>
++	- Ala Eddine Limame <ala-eddine.limame at polymtl dot ca>
++	- Alexis S. Bourrelle <bourrelle at polymtl dot ca>
++	- Marilyne Mercier <marilyne.mercier at polymtl dot ca>
++	- Jean Tessier <jean.tessier at polymtl dot ca>
++	- Video layer implementation
++	- Video conference
++
++Pierre-Luc Beaudoin <pierre-luc.beaudoin at savoirfairelinux dot com>
++	- Many portions of code
++	- GTK client implementation
++
++Yan Morin <yan dot morin at savoirfairelinux dot com>
++	- zeroconf integration
++	- dring deamon
++	- add and improve sip core feature
++	- tests and debugging
++
++Jerome Oufella <jerome dot oufella at savoirfairelinux dot com>
++	- Many portions of code and bug fixes
++
++Julien Plissonneau Duquene <... at savoirfairelinux dot com>
++	- autotools cleanups
++
++Jean-Philippe Barrette-LaPierre
++	- Autotools support and portions of code
++
++Laurielle Lea
++	- Implementation of SFLphone
++
++Sherry Yang <syangs04 at yahoo dot com>
++
++Imran Akbar <imr at stanford dot edu>
++	- Working on Win32 port
++
++Contributors:
++
++Mikael Magnusson
+diff --git a/CODING b/CODING
+new file mode 100644
+index 000000000..fc12c568d
+--- /dev/null
++++ b/CODING
+@@ -0,0 +1,27 @@
++= Coding Standards =
++
++Please follow our coding standards when developing:
++https://git.jami.net/savoirfairelinux/ring-project/wikis/guidelines/Libring-coding-rules
++
++= Gerrit Workflow =
++
++Gerrit is used as a code review tool. It is also the primary Git repository.
++Wiki documentation: https://git.jami.net/savoirfairelinux/ring-project/wikis/tutorials/Working-with-gerrit
++
++== Commit Messages ==
++
++Indicate the number of the related Tuleap issue in your commit message.
++
++== commit-msg hook ==
++
++The Gerrit commit-msg hook must be installed before code reviews can be pushed to Gerrit.
++This is because Gerrit relies on a unique Change-Id that can be tracked. The commit-msg hook
++takes care of inserting a Change-Id in your commit messages for you.
++
++It can be installed in your local git repository with the following command:
++$ gitdir=$(git rev-parse --git-dir); scp -p -P 29420 username@gerrit-ring.savoirfairelinux.com:hooks/commit-msg ${gitdir}/hooks/
++
++== Gerrit integration with Jenkins ==
++
++* http://strongspace.com/rtyler/public/gerrit-jenkins-notes.pdf
++* https://wiki.jenkins-ci.org/display/JENKINS/Gerrit+Trigger
+diff --git a/ChangeLog b/ChangeLog
+new file mode 100644
+index 000000000..81988f8c8
+--- /dev/null
++++ b/ChangeLog
+@@ -0,0 +1,2 @@
++This file is only to satisfy autotool requirements.
++Please refer to the NEWS file for changes.
+diff --git a/Makefile.am b/Makefile.am
+new file mode 100644
+index 000000000..0dfd02f8f
+--- /dev/null
++++ b/Makefile.am
+@@ -0,0 +1,43 @@
++include globals.mk
++
++# Makefile.am
++
++SOURCES=
++
++ACLOCAL_AMFLAGS = -I m4
++
++SUBDIRS = src ringtones man doc bin test
++
++EXTRA_DIST = m4/libtool.m4 \
++			 m4/lt~obsolete.m4 \
++			 m4/ltoptions.m4 \
++			 m4/ltsugar.m4 \
++			 m4/ltversion.m4 \
++			 contrib/bootstrap \
++			 contrib/src
++
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = jami.pc
++
++coverage-html:
++	$(AM_V_at)lcov --no-external --capture --initial --directory $(top_builddir) --output-file jami-coverage-base.info
++	$(AM_V_at)lcov --no-external --capture --directory $(top_builddir) --output-file jami-coverage-tests.info
++	$(AM_V_at)lcov --add-tracefile jami-coverage-base.info --add-tracefile jami-coverage-tests.info --output-file jami-coverage.info
++	$(AM_V_at)lcov --remove jami-coverage.info "$(abs_top_builddir)/contrib/*" "$(abs_top_builddir)/bin/dbus/*"  --output-file jami-coverage-filtered.info
++	$(MKDIR_P) html-coverage-output
++	genhtml -o html-coverage-output jami-coverage-filtered.info
++
++coverage-%:
++	gcovr --filter src --filter test --$*-pretty --$* --output $*-coverage-output.$*
++
++coverage-clean:
++	$(AM_V_at)lcov --directory $(top_builddir) --zerocounters
++	$(AM_V_at)rm -f *.info
++	$(AM_V_at)rm -rf *-coverage-output
++
++coverage-cleaner: coverage-clean
++	$(AM_V_at)find -name '*.gcda' -delete -or -name "*.gcno" -delete
++
++all-coverage: coverage-clean coverage-html coverage-xml coverage-json
++
++.PHONY: all-coverage coverage-html coverage-json coverage-xml coverage-clean coverage-cleaner
+diff --git a/README.md b/README.md
+index 7c1cdd599..d809b1523 100644
+--- a/README.md
++++ b/README.md
+@@ -77,6 +77,28 @@ ninja
+ ninja install
+ ```
+ 
++C) With Autotools
++
++1) Compile the dependencies first
++
++```bash
++cd contrib
++mkdir native
++cd native
++../bootstrap
++make
++```
++
++2) Then the jamid application and/or libjami library
++
++```bash
++cd ../..
++./autogen.sh
++./configure
++make
++make install
++```
++
+ How to compile the daemon for Android (on a Linux or macOS host)
+ ----
+ 
+diff --git a/autogen.sh b/autogen.sh
+new file mode 100755
+index 000000000..74e170cfe
+--- /dev/null
++++ b/autogen.sh
+@@ -0,0 +1,41 @@
++#!/usr/bin/env bash
++
++AUTORECONF=`which autoreconf`
++if test -z $AUTORECONF; then
++        echo "*** No autoreconf found, please install it ***"
++        exit 1
++fi
++
++if !"${PKG_CONFIG:-pkg-config}" --version >/dev/null 2>&1; then
++    echo "*** No pkg-config found, please install it ***"
++    # warn without exiting, since pkg-config is only needed
++    # by configure, not autogen.sh
++fi
++
++LIBTOOLIZE=`which libtoolize || which glibtoolize`
++if test -z $LIBTOOLIZE; then
++    LIBTOOLIZE=`which glibtoolize`
++    if test -z $LIBTOOLIZE; then
++        echo "*** No libtool found, please install it ***"
++        exit 1
++    fi
++fi
++
++# Workaround for http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=565663
++mkdir -p m4
++
++HOOKS_DIR=".git/hooks"
++# install pre-commit hook for doing clean commits
++if [ -d "$HOOKS_DIR" ];
++then
++    pushd ${HOOKS_DIR}
++    if test ! \( -x pre-commit -a -L pre-commit \);
++    then
++        echo "Creating symbolic link for pre-commit hook..."
++        rm -f pre-commit
++        ln -s pre-commit.sample pre-commit
++    fi
++    popd
++fi
++
++autoreconf --force --install --verbose -Wall -I m4
+diff --git a/bin/Makefile.am b/bin/Makefile.am
+new file mode 100644
+index 000000000..235b54b88
+--- /dev/null
++++ b/bin/Makefile.am
+@@ -0,0 +1,29 @@
++if HAVE_WIN32
++libexec_PROGRAMS = jamid
++jamid_SOURCES = winmain.cpp
++jamid_CXXFLAGS = -I$(top_srcdir)/src \
++                   -I$(top_srcdir)/src/jami \
++                   -DTOP_BUILDDIR=\"$$(cd "$(top_builddir)"; pwd)\" \
++		   $(AM_CXXFLAGS)
++jamid_LDADD = $(top_builddir)/src/libjami.la
++endif
++
++if HAVE_OSX
++libexec_PROGRAMS = jamid
++jamid_SOURCES = osxmain.cpp
++jamid_CXXFLAGS = -I$(top_srcdir)/src \
++                   -I$(top_srcdir)/src/jami \
++                   -DTOP_BUILDDIR=\"$$(cd "$(top_builddir)"; pwd)\" \
++		   $(AM_CXXFLAGS)
++jamid_LDADD = $(top_builddir)/src/libjami.la
++endif
++
++SUBDIRS=
++
++if RING_DBUS
++SUBDIRS+=dbus
++endif
++
++if ENABLE_NODEJS
++SUBDIRS+=nodejs
++endif
+diff --git a/bin/dbus/Makefile.am b/bin/dbus/Makefile.am
+new file mode 100644
+index 000000000..c5e98ac65
+--- /dev/null
++++ b/bin/dbus/Makefile.am
+@@ -0,0 +1,81 @@
++include $(top_srcdir)/globals.mk
++
++libexec_PROGRAMS= jamid
++
++BUILT_SOURCES=                      \
++    dbuscallmanager.adaptor.h       \
++    dbusconfigurationmanager.adaptor.h \
++    dbusinstance.adaptor.h \
++    dbuspresencemanager.adaptor.h
++
++dbuspresencemanager.adaptor.h: cx.ring.Ring.PresenceManager.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++
++# Rule to generate the binding headers
++dbuscallmanager.adaptor.h: cx.ring.Ring.CallManager.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++
++# Rule to generate the binding headers
++dbusconfigurationmanager.adaptor.h: cx.ring.Ring.ConfigurationManager.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++
++# Rule to generate the binding headers
++dbusinstance.adaptor.h: cx.ring.Ring.Instance.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++
++if ENABLE_VIDEO
++dbusvideomanager.adaptor.h: cx.ring.Ring.VideoManager.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++BUILT_SOURCES+= dbusvideomanager.adaptor.h
++endif
++
++if ENABLE_PLUGIN
++dbuspluginmanagerinterface.adaptor.h: cx.ring.Ring.PluginManagerInterface.xml Makefile.am
++	$(SDBUSCPP_XML2CPP) $< --adaptor=$@
++BUILT_SOURCES+= dbuspluginmanagerinterface.adaptor.h
++endif
++
++jamid_SOURCES= \
++    main.cpp \
++    dbuscallmanager.hpp \
++    dbusconfigurationmanager.hpp \
++    dbusinstance.hpp \
++    dbuspresencemanager.hpp \
++    $(BUILT_SOURCES)
++
++if ENABLE_VIDEO
++    jamid_SOURCES+= dbusvideomanager.hpp
++endif
++if ENABLE_PLUGIN
++    jamid_SOURCES+= dbuspluginmanagerinterface.hpp
++endif
++
++jamid_CXXFLAGS= ${SDBUSCPP_CFLAGS} -I$(top_srcdir)/src/jami
++jamid_LDADD= ${SDBUSCPP_LIBS} $(top_builddir)/src/libjami.la
++
++do_subst = $(SED) \
++	-e 's,[@]LIBEXECDIR[@],$(libexecdir),g'
++
++cx.ring.Ring.service: net.jami.daemon.service.in Makefile
++	$(do_subst) < $< > $@
++
++# Dbus service file
++servicedir = $(datadir)/dbus-1/services
++service_DATA = cx.ring.Ring.service
++
++# Dbus interface files
++# https://dbus.freedesktop.org/doc/dbus-api-design.html#interface-files
++interfacedir = $(datadir)/dbus-1/interfaces
++interface_DATA = cx.ring.Ring.CallManager.xml \
++                 cx.ring.Ring.ConfigurationManager.xml \
++                 cx.ring.Ring.Instance.xml \
++                 cx.ring.Ring.PresenceManager.xml
++
++if ENABLE_VIDEO
++interface_DATA += cx.ring.Ring.VideoManager.xml
++endif
++if ENABLE_PLUGIN
++interface_DATA += cx.ring.Ring.PluginManagerInterface.xml
++endif
++
++CLEANFILES= $(BUILT_SOURCES) cx.ring.Ring.service
+diff --git a/bin/nodejs/Makefile.am b/bin/nodejs/Makefile.am
+new file mode 100644
+index 000000000..4e4802109
+--- /dev/null
++++ b/bin/nodejs/Makefile.am
+@@ -0,0 +1,19 @@
++include $(top_srcdir)/globals.mk
++
++BUILT_SOURCES= \
++	jami_wrapper.cpp \
++	build/Makefile \
++	build/Release/obj.target/jami.node
++
++jami_wrapper.cpp: nodejs_interface.i configurationmanager.i managerimpl.i callmanager.i
++	$(SWIG) -v -c++ -javascript -node -o jami_wrapper.cpp nodejs_interface.i
++
++build/Makefile: jami_wrapper.cpp binding.gyp
++	node-gyp configure --target=v16.14.2 --arch=x64
++
++build/Release/obj.target/jami.node: build/Makefile jami_wrapper.cpp callback.h
++	node-gyp build
++
++CLEANFILES= \
++	$(BUILT_SOURCES) \
++	build/Release/jami.node
+\ No newline at end of file
+diff --git a/configure.ac b/configure.ac
+new file mode 100644
+index 000000000..aee7eb7f5
+--- /dev/null
++++ b/configure.ac
+@@ -0,0 +1,624 @@
++dnl Jami - configure.ac
++
++dnl Process this file with autoconf to produce a configure script.
++AC_PREREQ([2.69])
++AC_INIT([Jami Daemon],[16.0.0],[jami@gnu.org],[jami])
++
++dnl Clear the implicit flags that default to '-g -O2', otherwise they
++dnl take precedence over the values we set via the
++dnl DAEMONCFLAGS/DAEMONCXXFLAGS variables below.
++: ${CFLAGS=""}
++: ${CXXFLAGS=""}
++
++AC_COPYRIGHT([[Copyright (c) Savoir-faire Linux Inc. 2004-2023]])
++AC_REVISION([$Revision$])
++
++dnl Where to find configure files
++AC_CONFIG_SRCDIR(src/ring_api.cpp)
++AC_CONFIG_AUX_DIR([build-aux])
++AC_CONFIG_MACRO_DIR([m4])
++AC_CANONICAL_BUILD
++AC_CANONICAL_HOST
++
++AM_INIT_AUTOMAKE([-Wno-portability subdir-objects foreign])
++m4_ifdef([AM_PROG_AR], [AM_PROG_AR]) # required by automake 1.12
++AC_CONFIG_HEADERS([config.h])
++
++# Silent build by default. Use make V=1 to increase verbosity
++m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
++
++dnl debug mode is default-disabled
++AC_ARG_ENABLE([debug],
++  AS_HELP_STRING([--enable-debug],
++    [Build in debug mode, adds stricter warnings, disables optimization]))
++
++AS_IF([test "x$enable_debug" = "xyes"],
++  [DAEMONCFLAGS+=" -g -fno-omit-frame-pointer -Wall -Wextra -Wnon-virtual-dtor -Wno-deprecated -Wno-deprecated-declarations \
++-Wno-unknown-pragmas -Wformat=2 -O0"
++   DAEMONCXXFLAGS+=" -g -fno-omit-frame-pointer -Wall -Wextra -Wnon-virtual-dtor -Wno-deprecated -Wno-deprecated-declarations \
++-Wno-unknown-pragmas -Wformat=2 -O0"],
++  [DAEMONCFLAGS+=" -DNDEBUG=1 -O3"
++   DAEMONCXXFLAGS+=" -DNDEBUG=1 -O3 -Wno-deprecated"])
++
++dnl Build using address sanitizer
++AC_ARG_ENABLE([asan],
++  AS_HELP_STRING([--enable-asan],
++    [Enable address sanitization]))
++
++AS_IF([test "x$enable_asan" = "xyes"],
++  [DAEMONCXXFLAGS+=" -fsanitize=address -fno-omit-frame-pointer"
++   DAEMONLDFLAGS+=" -fsanitize=address"
++   AC_MSG_NOTICE([WARNING: Address sanitization enabled for libjami])], [])
++
++AC_ARG_ENABLE([fuzzing],
++  AS_HELP_STRING([--enable-fuzzing],
++    [Build fuzzing tools]))
++AM_CONDITIONAL([ENABLE_FUZZING], [test "x$enable_fuzzing" = "xyes"])
++AM_COND_IF([ENABLE_FUZZING], [AC_CONFIG_FILES([test/fuzzing/Makefile])])
++
++AC_ARG_ENABLE([agent],
++  AS_HELP_STRING([--enable-agent],
++    [Build agent]))
++AM_CONDITIONAL([ENABLE_AGENT], [test "x$enable_agent" = "xyes"])
++AM_COND_IF([ENABLE_AGENT],
++  [AC_CONFIG_FILES([test/agent/Makefile])
++   AC_CONFIG_FILES([test/agent/pre-inst-env:test/agent/build-aux/pre-inst-env.in],
++                   [chmod +x test/agent/pre-inst-env])
++   AC_CONFIG_FILES([test/agent/scenarios/bulk-calls/run-scenario],
++                   [chmod +x test/agent/scenarios/bulk-calls/run-scenario])])
++
++AC_ARG_ENABLE([tracepoints], AS_HELP_STRING([--enable-tracepoints], [Enable tracepoints]))
++
++AS_IF([test "x$enable_tracepoints" = "xyes"],
++  [AC_DEFINE(ENABLE_TRACEPOINTS, [], [Static tracepoints enabled])
++   AM_CONDITIONAL(ENABLE_TRACEPOINTS, true)],
++  [AM_CONDITIONAL(ENABLE_TRACEPOINTS, false)])
++
++dnl Check for programs
++AC_PROG_CC
++AC_PROG_CXX
++AC_PROG_OBJCXX
++AC_PROG_CPP
++AC_PROG_INSTALL
++AC_PROG_LN_S
++AC_PROG_MAKE_SET
++AC_LANG(C++)
++
++dnl
++dnl  Check the operating system
++dnl
++HAVE_WIN64="0"
++HAVE_IOS="0"
++HAVE_OSX="0"
++
++case "${host_os}" in
++  "")
++    SYS=unknown
++    ;;
++  linux*)
++    SYS=linux
++    # Necessary for linking .a to a .so
++    DAEMONLDFLAGS+=" -Wl,-Bsymbolic"
++    # Needed for plugin system
++    DAEMONLDFLAGS+=" -ldl"
++    ;;
++  darwin*)
++    SYS=darwin
++    AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
++        [[#import <TargetConditionals.h>
++          #if TARGET_OS_IPHONE == 0
++          #error this is not an IPHONE
++          #endif
++        ]])],
++        [HAVE_IOS="1"],
++        [HAVE_OSX="1"])
++    ;;
++  mingw32*)
++    SYS=mingw32
++    AC_CHECK_TOOL(WINDRES, windres, :)
++    AC_CHECK_TOOL(OBJCOPY, objcopy, :)
++    AC_DEFINE([_UNICODE], [1], [Define to 1 for Unicode (Wide Chars) APIs.])
++    AC_DEFINE([UNICODE], [1], [Define to 1 for Unicode (Wide Chars) APIs.])
++    AC_DEFINE([_ISOC99_SOURCE], [1], [Extensions to ISO C89 from ISO C99.])
++    AC_DEFINE([_ISOC11_SOURCE], [1], [Extensions to ISO C99 from ISO C11.])
++    AC_DEFINE([_POSIX_SOURCE], [1], [IEEE Std 1003.1.])
++    AC_DEFINE([_POSIX_C_SOURCE], [200809L], [IEEE Std 1003.1.])
++    AC_DEFINE([_XOPEN_SOURCE], [700], [POSIX and XPG 7th edition])
++    AC_DEFINE([_XOPEN_SOURCE_EXTENDED], [1], [XPG things and X/Open Unix extensions.])
++    AC_DEFINE([_BSD_SOURCE], [1], [ISO C, POSIX, and 4.3BSD things.])
++    AC_DEFINE([_SVID_SOURCE], [1], [ISO C, POSIX, and SVID things.])
++
++    AC_DEFINE([WIN32_LEAN_AND_MEAN],[1], [Define to limit the scope of <windows.h>.])
++
++    DAEMONCPPFLAGS+=" -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -D__USE_MINGW_ANSI_STDIO=1"
++    DAEMONLDFLAGS+=" -Wl,--nxcompat -Wl,--dynamicbase"
++    LIBS+=" -lws2_32 -lwsock32 -lshlwapi"
++    ac_default_prefix="`pwd`/_win32"
++    DESTDIR="`pwd`/_win32/"
++    AC_SUBST(WINDOWS_ARCH)
++    AC_SUBST(PROGRAMFILES)
++
++    case "${host}" in
++      amd64*|x86_64*)
++        HAVE_WIN64="1"
++        ;;
++    esac
++    ;;
++  *)
++    SYS="${host_os}"
++    ;;
++esac
++AM_CONDITIONAL(HAVE_DARWIN,  test "${SYS}" = "darwin")
++AM_CONDITIONAL(HAVE_LINUX,   test "${SYS}" = "linux")
++AM_CONDITIONAL(HAVE_WIN32,   test "${SYS}" = "mingw32")
++AM_CONDITIONAL(HAVE_WIN64,   test "${HAVE_WIN64}" = "1")
++AM_CONDITIONAL(HAVE_OSX,     test "${HAVE_OSX}" = "1")
++AM_CONDITIONAL(HAVE_IOS,     test "${HAVE_IOS}" = "1")
++
++AS_IF([test "${HAVE_OSX}" = "1"],
++  [DAEMONCFLAGS+=" -arch $ARCH"
++   DAEMONCXXFLAGS+=" -arch $ARCH"]
++  [])
++
++AC_DEFINE([MSGPACK_DISABLE_LEGACY_NIL], [1], [msgpack])
++
++dnl FIXME this should be deduced automatically
++AC_DEFINE_UNQUOTED([HAVE_COREAUDIO],
++  `if test "${HAVE_OSX}" = "1" || test "${HAVE_IOS}" = "1"; \
++then echo 1; else echo 0; fi`,
++   [Define if you have CoreAudio])
++
++dnl Android is linux, but a bit different
++AS_IF([test "$SYS" = linux],[
++    AC_MSG_CHECKING([for an Android system])
++    AC_PREPROC_IFELSE([AC_LANG_PROGRAM(
++        [[#ifndef __ANDROID__
++         # error Not Android
++         #endif
++        ]],[[;]])
++    ],[
++      HAVE_ANDROID="1"
++      AC_MSG_RESULT([yes])
++    ],[
++      AC_MSG_RESULT([no])
++    ])
++])
++AM_CONDITIONAL(HAVE_ANDROID, test "${HAVE_ANDROID}" = "1")
++
++AS_IF([test "$SYS" = linux && test "${HAVE_ANDROID}" != "1"],
++  [DAEMONCPPFLAGS+=" -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"]
++  [])
++
++dnl override platform specific check for dependent libraries
++dnl otherwise libtool linking of shared libraries will
++dnl fail on anything other than pass_all.
++AC_CACHE_VAL(lt_cv_deplibs_check_method,
++    [lt_cv_deplibs_check_method=pass_all])
++
++LT_INIT([dlopen win32-dll shared static])
++
++dnl Define C++ as default language
++LT_LANG(C++)
++
++lt_cv_deplibs_check_method=pass_all
++
++dnl Check for C++17 support
++AX_CXX_COMPILE_STDCXX(17,[ext],[mandatory])
++
++dnl Check for header files
++AC_CHECK_HEADERS([arpa/inet.h cxxabi.h fcntl.h libintl.h limits.h \
++                  netdb.h netinet/in.h stdlib.h string.h \
++                  sys/ioctl.h sys/socket.h sys/time.h unistd.h])
++
++dnl Check for typedefs, structures, and compiler characteristics
++AC_TYPE_PID_T
++
++PKG_PROG_PKG_CONFIG()
++
++dnl On some OS we need static linking
++AS_IF([test -n "${PKG_CONFIG}"],
++  [AS_IF([test "${SYS}" = "mingw32" -o "${SYS}" = "darwin"],
++     [PKG_CONFIG="${PKG_CONFIG} --static"])])
++
++dnl Check if we are using clang
++AC_MSG_CHECKING([if compiling with clang])
++AC_COMPILE_IFELSE(
++[AC_LANG_PROGRAM([], [[
++#ifndef __clang__
++       not clang
++#endif
++]])],
++[CLANG=yes], [CLANG=no])
++
++AC_MSG_RESULT([$CLANG])
++
++dnl define LIBJAMI_BUILD because we are building libjami, not using it
++dnl if building shared library, define jami_EXPORTS
++AC_MSG_CHECKING([if compiling shared library])
++DAEMONCPPFLAGS+=" -fvisibility=hidden -DLIBJAMI_BUILD"
++AS_IF([test "x$enable_shared" == "xyes"],
++  [RING_SHARED=yes
++   DAEMONCPPFLAGS+=" -Djami_EXPORTS"],
++  [RING_SHARED=no])
++AC_MSG_RESULT([$RING_SHARED])
++
++DAEMONCPPFLAGS+=" -DASIO_STANDALONE -DMSGPACK_NO_BOOST"
++
++dnl
++dnl  Check for the contrib directory
++dnl
++AC_ARG_WITH(contrib,
++  [AS_HELP_STRING([--with-contrib[=DIR]],
++    [search for 3rd party libraries in DIR/include and DIR/lib])])
++AC_MSG_CHECKING([for 3rd party libraries path])
++AS_IF([test -z "${with_contrib}" || test "${with_contrib}" = "yes"],
++  [CONTRIB_DIR="${srcdir}/contrib/${host}"
++   AS_IF([test ! -d "${CONTRIB_DIR}"],
++     [echo "${CONTRIB_DIR} not found" >&AS_MESSAGE_LOG_FD
++      CONTRIB_DIR="${srcdir}/contrib/`$CC -dumpmachine`"
++      AS_IF([test ! -d "${CONTRIB_DIR}"],
++        [echo "${CONTRIB_DIR} not found" >&AS_MESSAGE_LOG_FD
++         CONTRIB_DIR=""
++         AC_MSG_RESULT([not found])])])],
++  [AS_IF([test "${with_contrib}" != "no"],
++     [CONTRIB_DIR="${with_contrib}"],
++     [CONTRIB_DIR=""
++      AC_MSG_RESULT([disabled])])])
++
++AS_IF([test -n "${CONTRIB_DIR}"],
++  [AS_IF([test -d "${CONTRIB_DIR}/lib"],
++    [CONTRIB_DIR=`cd "${CONTRIB_DIR}" && pwd`],
++    [echo "${CONTRIB_DIR}/lib not found" >&AS_MESSAGE_LOG_FD
++     CONTRIB_DIR=""
++     AC_MSG_RESULT([unusable])])])
++
++AS_IF([test -n "${CONTRIB_DIR}"],
++  [AC_MSG_RESULT([${CONTRIB_DIR}])
++   export PATH=${CONTRIB_DIR}/bin:$PATH
++
++   CPPFLAGS_SAVE="$CPPFLAGS"
++   CPPFLAGS+=" -I${CONTRIB_DIR}/include" dnl for AC_CHECK_HEADER
++   DAEMONCPPFLAGS+=" -I${CONTRIB_DIR}/include  -DPJ_AUTOCONF=1"
++
++   AS_IF([test "${HAVE_WIN64}" = "1"],
++     [DAEMONCPPFLAGS+=" -DPJ_WIN64=1"])
++
++   AS_IF([test "${SYS}" = "mingw32"],
++     [PKG_CONFIG_PATH_CUSTOM="${CONTRIB_DIR}/lib/pkgconfig:\
++${CONTRIB_DIR}/lib64/pkgconfig"
++      AC_SUBST(PKG_CONFIG_PATH_CUSTOM)
++      export PKG_CONFIG_PATH_CUSTOM])
++
++   export PKG_CONFIG_PATH="${CONTRIB_DIR}/lib/pkgconfig:\
++${CONTRIB_DIR}/lib64/pkgconfig:$PKG_CONFIG_PATH"
++   LDFLAGS_SAVE="$LDFLAGS"
++   LDFLAGS+=" -L${CONTRIB_DIR}/lib" dnl for AC_CHECK_LIB
++   DAEMONLDFLAGS+=" -L${CONTRIB_DIR}/lib"
++
++   AS_IF([test "${SYS}" = "darwin"],
++     [export LD_LIBRARY_PATH="${CONTRIB_DIR}/lib:$LD_LIBRARY_PATH"
++      export DYLD_LIBRARY_PATH="${CONTRIB_DIR}/lib:$DYLD_LIBRARY_PATH"])],
++  [AS_IF([test -n "${with_contrib}" && test "${with_contrib}" != "no"],
++     [AC_MSG_ERROR([Third party libraries not found!])])])
++AC_SUBST(CONTRIB_DIR)
++
++dnl Add extras/tools to the PATH
++TOOLS_DIR="${srcdir}/extras/tools/build/bin"
++AS_IF([test -d "${TOOLS_DIR}"],
++  [TOOLS_DIR=`cd "${TOOLS_DIR}" && pwd`
++   export PATH="${TOOLS_DIR}":$PATH])
++
++dnl Check for zlib
++PKG_CHECK_MODULES(ZLIB, zlib)
++
++PKG_CHECK_MODULES(LIBGIT2, [libgit2 >= 1.1.0])
++
++dnl Check for pjproject
++PKG_CHECK_MODULES(PJPROJECT, libpjproject)
++
++dnl Guile
++AM_COND_IF([ENABLE_AGENT],
++  [PKG_CHECK_MODULES(GUILE, [guile-3.0 >= 3.0.7])],)
++
++PKG_CHECK_MODULES([YAMLCPP], [yaml-cpp >= 0.5.1])
++
++PKG_CHECK_MODULES([JSONCPP], [jsoncpp >= 1.6.5],
++  [DAEMONCPPFLAGS+=" ${JSONCPP_CFLAGS}"
++   DAEMONLDFLAGS+=" ${JSONCPP_LIBS}"])
++
++if test "${HAVE_ANDROID}" = "1"; then
++  dnl Check for OpenSL
++  AC_ARG_WITH([opensl],
++    AS_HELP_STRING([--without-opensl],
++      [Ignore presence of opensl and disable it]))
++
++  AS_IF([test "x$with_opensl" != "xno"],
++    [AC_CHECK_HEADER(["SLES/OpenSLES.h"],
++      [have_opensl=yes], [have_opensl=no])],
++    [have_opensl=no])
++
++  AC_DEFINE_UNQUOTED([HAVE_OPENSL],
++    `if test "x$have_opensl" = "xyes"; then echo 1; else echo 0; fi`,
++    [Define if you have OpenSL])
++fi
++AM_CONDITIONAL([BUILD_OPENSL], test "x$have_opensl" = "xyes")
++
++if test "${SYS}" = "linux"; then
++  dnl Check for alsa development package - name: libasound2-dev
++  ALSA_MIN_VERSION=1.0
++  AC_ARG_WITH([alsa],
++    [AS_HELP_STRING([--without-alsa], [disable support for alsa])],
++    [],
++    [with_alsa=yes])
++  AS_IF([test "x$with_alsa" = "xyes"],
++    [PKG_CHECK_MODULES(ALSA, alsa >= ${ALSA_MIN_VERSION})]);
++
++  AC_DEFINE_UNQUOTED([HAVE_ALSA],
++    `if test "x$with_alsa" = "xyes"; then echo 1; else echo 0; fi`,
++    [Define if you have alsa])
++fi
++AM_CONDITIONAL(BUILD_ALSA, test "x$with_alsa" = "xyes")
++
++
++if test "${SYS}" = "linux"; then
++  dnl Check for pulseaudio development package - name: libpulse-dev
++  LIBPULSE_MIN_VERSION=0.9.15
++  AC_ARG_WITH([pulse],
++    [AS_HELP_STRING([--without-pulse], [disable support for pulseaudio])],
++    [],
++    [with_pulse=yes])
++
++  AS_IF([test "x$with_pulse" = "xyes"],
++    [PKG_CHECK_MODULES(PULSEAUDIO, libpulse >= ${LIBPULSE_MIN_VERSION})]);
++
++  AC_DEFINE_UNQUOTED([HAVE_PULSE],
++    `if test "x$with_pulse" = "xyes"; then echo 1; else echo 0; fi`,
++    [Define if you have pulseaudio])
++fi
++AM_CONDITIONAL(BUILD_PULSE, test "x$with_pulse" = "xyes")
++
++AC_ARG_WITH([jack],
++  AS_HELP_STRING([--without-jack], [Ignore presence of jack and disable it]))
++
++AS_IF([test "x$with_jack" != "xno"],
++  [PKG_CHECK_MODULES(JACK, jack, [have_jack=yes], [have_jack=no])],
++  [have_jack=no])
++
++AS_IF([test "x$have_jack" = "xyes"],,
++  [AS_IF([test "x$with_jack" = "xyes"],
++     [AC_MSG_ERROR([jack requested but not found])])])
++
++dnl check for libportaudio
++AS_IF([test "${SYS}" = "mingw32"],[
++AC_ARG_WITH([portaudio], [AS_HELP_STRING([--without-portaudio],
++            [disable support for portaudio])], [], [with_portaudio=yes])])
++AS_IF([test "x$with_portaudio" = "xyes"],
++  [PKG_CHECK_MODULES(PORTAUDIO, [portaudio-2.0],
++    [AC_DEFINE([HAVE_PORTAUDIO], 1, [Define if you have portaudio])])])
++
++AM_CONDITIONAL(BUILD_PORTAUDIO, test "x$with_portaudio" = "xyes")
++AM_CONDITIONAL(HAVE_PORTAUDIO, test "x$with_portaudio" = "xyes")
++
++AC_DEFINE_UNQUOTED([HAVE_JACK],
++  `if test "x$have_jack" = "xyes"; then echo 1; else echo 0; fi`,
++  [Define if you have jack])
++AM_CONDITIONAL(BUILD_JACK, test "x$have_jack" = "xyes")
++
++dnl Coverage is default-disabled
++AC_ARG_ENABLE([coverage], AS_HELP_STRING([--enable-coverage], [Enable coverage]))
++
++AS_IF([test "x$enable_coverage" = "xyes"],
++  [DAEMONCXXFLAGS+=" --coverage"
++   DAEMONLDFLAGS+=" --coverage"])
++
++# SDBUSCPP
++dnl Check for sdbus-c++, the C++ bindings for D-Bus
++AC_ARG_WITH([dbus],
++  [AS_HELP_STRING([--without-dbus], [disable support for dbus])],
++  [],
++  [with_dbus=yes])
++AS_IF([test "x$with_dbus" = "xyes"],
++  [PKG_CHECK_MODULES(SDBUSCPP, [sdbus-c++ >= 2.0.0])
++
++   AC_CONFIG_FILES([bin/dbus/Makefile])
++
++   AC_PATH_PROG([SDBUSCPP_XML2CPP], [sdbus-c++-xml2cpp])
++   AS_IF([test -z "$SDBUSCPP_XML2CPP"],
++     [AC_MSG_ERROR([sdbus-c++-xml2cpp not found])])
++
++   AM_CONDITIONAL(RING_DBUS, true)],
++  [TESTS= $(check_PROGRAMS)
++   AM_CONDITIONAL(RING_DBUS, false)]);
++
++dnl nodejs module
++AC_ARG_WITH([nodejs], AS_HELP_STRING([--with-nodejs], [Enable NodeJS module]))
++AM_CONDITIONAL(ENABLE_NODEJS, [test "x$with_nodejs" = "xyes"])
++AM_COND_IF([ENABLE_NODEJS],
++  [AC_PATH_PROG(SWIG, swig, "")
++   AS_AC_EXPAND(SBINDIR, $sbindir)
++   AC_SUBST(SBINDIR)
++   AC_CONFIG_FILES([bin/nodejs/Makefile])])
++
++dnl Check for libav
++PKG_CHECK_MODULES(LIBAVUTIL, libavutil >= 54.31.100)
++PKG_CHECK_MODULES(LIBAVCODEC, libavcodec >= 56.60.100)
++LIBAVCODEC_CFLAGS="${LIBAVCODEC_CFLAGS} -D__STDC_CONSTANT_MACROS"
++PKG_CHECK_MODULES(LIBAVFORMAT, libavformat >= 56.40.101)
++PKG_CHECK_MODULES(LIBAVDEVICE, libavdevice >= 56.4.100)
++PKG_CHECK_MODULES(LIBAVFILTER, libavfilter >= 5.40.101)
++PKG_CHECK_MODULES(LIBSWSCALE, libswscale >= 3.1.101)
++PKG_CHECK_MODULES(LIBSWRESAMPLE, libswresample >= 1.2.101)
++
++dnl Jami Plugin is default-enabled
++AC_ARG_ENABLE([plugin], AS_HELP_STRING([--disable-plugin], [Disable plugin]))
++AS_IF([test "x$enable_plugin" != "xno"],
++  [AC_DEFINE(ENABLE_PLUGIN, [], [Jami Plugin support enabled])
++   AM_CONDITIONAL(ENABLE_PLUGIN, true)
++   AS_IF([test "$SYS" = linux],
++     [PKG_CHECK_MODULES([ARCHIVE], [libarchive >= 3.0])],
++     [AS_IF([test "$SYS" = darwin],
++     [PKG_CHECK_MODULES([MINIZIP], [minizip >= 3.0.0])],
++     [])]
++     )],
++  [AM_CONDITIONAL(ENABLE_PLUGIN, false)]);
++
++dnl Video is default-enabled
++AC_ARG_ENABLE([video], AS_HELP_STRING([--disable-video], [Disable video]))
++
++AS_IF([test "x$enable_video" != "xno"],
++  [AC_DEFINE(ENABLE_VIDEO, [], [Video support enabled])
++   AM_CONDITIONAL(ENABLE_VIDEO, true)
++   AS_IF([test "$SYS" = linux && test -z "${HAVE_ANDROID_FALSE}"],
++     [PKG_CHECK_MODULES(UDEV, libudev)],
++     [])],
++  [AM_CONDITIONAL(ENABLE_VIDEO, false)]);
++
++AC_ARG_ENABLE([accel],
++  AS_HELP_STRING([--disable-accel],
++    [Disable all hardware accelerations (enabled by default)]))
++AS_IF([test "x$enable_video" != "xno" -a "x$enable_accel" != "xno"],
++  dnl if new hwaccel api is found, activate hardware accel
++  dnl prefix needs to be different from the one above
++  [PKG_CHECK_MODULES(AVUTIL, libavutil >= 55.75.100,
++     [ring_accel="yes"
++      AC_DEFINE([ENABLE_HWACCEL], [1], [Hardware acceleration is enabled])
++      AS_IF([test "${SYS}" = "darwin"],
++        [AC_CHECK_HEADER([VideoToolbox/VideoToolbox.h],
++           [AC_CHECK_HEADER([libavcodec/videotoolbox.h],
++              [ring_vt="yes"
++               AC_DEFINE([ENABLE_VIDEOTOOLBOX], [1],
++                 [Defined if videotoolbox is available])])])])],
++     [])])
++AM_CONDITIONAL([ENABLE_HWACCEL], [test "x${ring_accel}" = "xyes"])
++
++dnl check for GnuTLS
++PKG_CHECK_MODULES([GNUTLS], [gnutls >= 3.7.4])
++PKG_CHECK_MODULES([NETTLE], [nettle >= 3.0.0])
++
++# PTHREAD
++# required dependency: libxpat
++AX_PTHREAD
++
++dnl Check for libcppunit-dev
++CPPUNIT_MIN_VERSION=1.12
++PKG_CHECK_MODULES(CPPUNIT, cppunit >= ${CPPUNIT_MIN_VERSION},
++  AM_CONDITIONAL(BUILD_TEST, test 1 = 1 ),
++  AM_CONDITIONAL(BUILD_TEST, test 0 = 1 ))
++
++
++# SPEEX CODEC
++# required dependency: libspeex
++dnl Check for libspeex
++AC_ARG_WITH([speex],
++  [AS_HELP_STRING([--without-speex], [disable support for speex codec])],
++  [],
++  [with_speex=yes])
++
++AS_IF([test "x$with_speex" != xno], [PKG_CHECK_MODULES([SPEEX], [speex])])
++
++AC_DEFINE_UNQUOTED([HAVE_SPEEX],
++  `if test "x$with_speex" = "xyes"; then echo 1; else echo 0; fi`,
++  [Define if you have libspeex])
++AM_CONDITIONAL(BUILD_SPEEX, test "x$with_speex" = "xyes" )
++
++# SPEEX DSP
++# required dependency: libspeexdsp
++dnl check in case the libspeexdsp is not installed
++AC_ARG_WITH([speexdsp],
++  [AS_HELP_STRING([--without-speexdsp],
++  [disable support for speexdp Noise Suppression and Automatic Gain Control])],
++  [],
++  [with_speexdsp=yes])
++
++AS_IF([test "x$with_speexdsp" != xno],
++  [PKG_CHECK_MODULES([SPEEXDSP], [speexdsp])])
++AC_DEFINE_UNQUOTED([HAVE_SPEEXDSP],
++  `if test "x$with_speexdsp" = "xyes"; then echo 1; else echo 0; fi`,
++  [Define if you have libspeexdsp])
++AM_CONDITIONAL(BUILD_SPEEXDSP, test "x$with_speexdsp" = "xyes" )
++
++# WEBRTC AUDIO PROCESSING
++if test "${SYS}" = "linux"; then
++  dnl Check for webrtc-audio-processing development package
++  dnl - name: libwebrtc-audio-processing-dev
++  AC_ARG_WITH([webrtcap],
++    [AS_HELP_STRING([--without-webrtcap],
++       [disable support for webrtc-audio-processing])],
++    [], [with_webrtc_ap=yes])
++
++  AS_IF([test "x$with_webrtc_ap" = "xyes"],
++    [PKG_CHECK_MODULES(WEBRTC, [webrtc-audio-processing >= 0.3],
++      [AC_DEFINE([HAVE_WEBRTC_AP], 1,
++         [Define if you have webrtc-audio-processing])],
++      [AC_MSG_WARN([Missing webrtc-audio-processing development files])])])
++fi
++AM_CONDITIONAL([HAVE_WEBRTC_AP], test "x$with_webrtc_ap" = "xyes")
++
++PKG_CHECK_MODULES([OPENDHT], [opendht >= 2.3.2])
++PKG_CHECK_MODULES([DHTNET], [dhtnet])
++PKG_CHECK_MODULES([SECP256K1], [libsecp256k1 >= 0.1])
++PKG_CHECK_MODULES([FMT], [fmt >= 7.0])
++PKG_CHECK_MODULES([SIMDUTF], [simdutf])
++
++# SHM
++dnl check for shm
++AS_IF([test "x$with_dbus" == xyes],
++  AC_DEFINE([ENABLE_SHM], [1], [Define if you have shared memory support]))
++
++# LTTNG
++AM_COND_IF([ENABLE_TRACEPOINTS],
++ [PKG_CHECK_MODULES(LTTNG, [lttng-ust >= 2.13])
++  PKG_CHECK_MODULES(LIBURCU, [liburcu >= 0.13.1])])
++
++# DOXYGEN
++# required dependency(ies): doxygen
++# check for doxygen, mostly stolen from http://log4cpp.sourceforge.net/
++# ----------------------------------------------------------------------------
++AC_DEFUN([BB_ENABLE_DOXYGEN],
++  [AC_ARG_ENABLE(doxygen,
++     [AS_HELP_STRING([--enable-doxygen],
++        [enable documentation generation with doxygen (disabled by default)])])
++   AC_ARG_ENABLE(dot,
++     [AS_HELP_STRING([--enable-dot],
++        [use 'dot' to generate graphs in doxygen (auto)])])
++   if test "x$enable_doxygen" = xyes; then
++     AC_PATH_PROG(DOXYGEN, doxygen, , $PATH)
++     test x$DOXYGEN = x && AC_MSG_ERROR([unable to find doxygen])
++     AC_PATH_PROG(DOT, dot, , $PATH)
++     test x$DOT = x -a "x$enable_dot" = xyes && AC_MSG_ERROR([unable to find dot])
++   fi
++   AM_CONDITIONAL(ENABLE_DOXYGEN, test "x$DOXYGEN" != "x")])
++
++# Actually perform the doxygen check
++BB_ENABLE_DOXYGEN
++
++dnl Reset the *user* variables to their initial values.
++CPPFLAGS="$CPPFLAGS_SAVE"
++LDFLAGS="$LDFLAGS_SAVE"
++
++AC_CONFIG_FILES([Makefile \
++                 bin/Makefile \
++                 src/Makefile \
++                 ringtones/Makefile \
++                 test/Makefile\
++                 test/sip/Makefile
++                 test/unitTest/Makefile \
++                 man/Makefile \
++                 doc/Makefile \
++                 doc/doxygen/Makefile
++                 jami.pc])
++
++dnl Transfer the Automake variables set here to Makefile.in.
++echo DAEMONCPPFLAGS=$DAEMONCPPFLAGS
++AS_IF([test "${HAVE_OSX}" = "1"],
++  [CXXFLAGS="$DAEMONCXXFLAGS"
++   OBJCXX="$CXX $DAEMONCXXFLAGS"
++   OBJCXXFLAG="$CXX $DAEMONCXXFLAGS"]
++  [])
++AC_SUBST([AM_CPPFLAGS], [$DAEMONCPPFLAGS])
++AC_SUBST([AM_CFLAGS],   [$DAEMONCFLAGS])
++AC_SUBST([AM_CXXFLAGS], [$DAEMONCXXFLAGS])
++AC_SUBST([AM_LDFLAGS],  [$DAEMONLDFLAGS])
++
++# Go!
++AC_OUTPUT
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+new file mode 100644
+index 000000000..48a288e1e
+--- /dev/null
++++ b/doc/Makefile.am
+@@ -0,0 +1,5 @@
++SUBDIRS = doxygen
++
++.PHONY: doc
++doc:
++	$(MAKE) -C doxygen doc
+diff --git a/doc/doxygen/Makefile.am b/doc/doxygen/Makefile.am
+new file mode 100644
+index 000000000..46978be64
+--- /dev/null
++++ b/doc/doxygen/Makefile.am
+@@ -0,0 +1,62 @@
++if ENABLE_DOXYGEN
++
++html_parent_dir = .
++HTML_HEADER =
++HTML_FOOTER =
++
++all: doxygen-trac
++	
++.PHONY: doxygen-trac
++
++doxygen-trac: clean core-doc-trac gtk-gui-doc-trac
++
++%-doc-trac : %-doc
++	ln -sf ${html_parent_dir}/$< ${html_parent_dir}/$</html
++
++doc: clean core-doc gtk-gui-doc
++
++%-doc : %-doc.cfg
++	rm -rf $@/ refman.pdf
++	$(DOXYGEN) $<
++#	$(MAKE) -C latex/
++#	mv latex/refman.pdf ./refman.pdf
++
++
++clean-local:
++	echo "clean-local: " && pwd
++	rm -rf latex/
++	rm -rf ${html_parent_dir}/*-doc/
++	rm -f *~
++	rm -f doxygen.log
++	rm -f doxygen.cfg
++
++maintainer-clean-local: clean-local
++	echo "maintainer-clean-local: " && pwd
++	rm -rf html refman.pdf
++
++## We borrow guile's convention and use @-...-@ as the substitution
++## brackets here, instead of the usual @...@.  This prevents autoconf
++## from substituting the values directly into the left-hand sides of
++## the sed substitutions.
++%.cfg : %.cfg.in
++	rm -f $@.tmp
++	sed < $< > $@.tmp \
++            -e 's:@-top_srcdir-@:${top_srcdir}/src:g'
++	sed < $@.tmp > $@.tmp2 \
++            -e 's:@-html_dir-@:${html_parent_dir}/$*:g'
++	rm $@.tmp
++	sed < $@.tmp2 > $@.tmp3 \
++            -e 's:@-html_header-@:${HTML_HEADER}:g'
++	rm $@.tmp2
++	sed < $@.tmp3 > $@.tmp4 \
++            -e 's:@-html_footer-@:${HTML_FOOTER}:g'
++	rm $@.tmp3
++	sed < $@.tmp4 > $@.tmp5 \
++            -e 's:@PROJECT_NAME@:${PACKAGE_NAME}:g'
++	rm $@.tmp4
++	sed < $@.tmp5 > $@.tmp6 \
++            -e 's:@PACKAGE_VERSION@:${PACKAGE_VERSION}:g'
++	rm $@.tmp5
++	mv $@.tmp6 $@
++
++endif # ENABLE_DOXYGEN
+diff --git a/globals.mk b/globals.mk
+new file mode 100644
+index 000000000..2ac71f984
+--- /dev/null
++++ b/globals.mk
+@@ -0,0 +1,23 @@
++# Global variables
++
++src=$(abs_top_srcdir)
++
++JAMI_DIRTY_REPO ?= $(shell git diff-index --quiet HEAD 2>/dev/null || echo dirty)
++JAMI_REVISION ?= $(shell git log -1 --format="%h" --abbrev=10 2>/dev/null)
++JAMI_DATADIR ?= $(datadir)/jami
++
++# Preprocessor flags
++AM_CPPFLAGS += \
++	-I$(src)/src \
++	-I$(src)/src/config \
++	-I$(src)/src/media \
++	-I$(src)/test \
++	-I$(src)/src/jami \
++	$(SIP_CFLAGS) \
++	-DPREFIX=\"$(prefix)\" \
++	-DJAMI_DATADIR=\"$(JAMI_DATADIR)\" \
++	-DENABLE_TRACE \
++	-DJAMI_REVISION=\"$(JAMI_REVISION)\" \
++	-DJAMI_DIRTY_REPO=\"$(JAMI_DIRTY_REPO)\" \
++	-DPJSIP_MAX_PKT_LEN=8000 \
++	-DPJ_AUTOCONF=1
+diff --git a/m4/.gitignore b/m4/.gitignore
+new file mode 100644
+index 000000000..464ba5caa
+--- /dev/null
++++ b/m4/.gitignore
+@@ -0,0 +1,5 @@
++libtool.m4
++lt~obsolete.m4
++ltoptions.m4
++ltsugar.m4
++ltversion.m4
+diff --git a/m4/as-ac-expand.m4 b/m4/as-ac-expand.m4
+new file mode 100644
+index 000000000..d6c9e3306
+--- /dev/null
++++ b/m4/as-ac-expand.m4
+@@ -0,0 +1,43 @@
++dnl as-ac-expand.m4 0.2.0
++dnl autostars m4 macro for expanding directories using configure's prefix
++dnl thomas@apestaart.org
++
++dnl AS_AC_EXPAND(VAR, CONFIGURE_VAR)
++dnl example
++dnl AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
++dnl will set SYSCONFDIR to /usr/local/etc if prefix=/usr/local
++
++AC_DEFUN([AS_AC_EXPAND],
++[
++  EXP_VAR=[$1]
++  FROM_VAR=[$2]
++
++  dnl first expand prefix and exec_prefix if necessary
++  prefix_save=$prefix
++  exec_prefix_save=$exec_prefix
++
++  dnl if no prefix given, then use /usr/local, the default prefix
++  if test "x$prefix" = "xNONE"; then
++    prefix="$ac_default_prefix"
++  fi
++  dnl if no exec_prefix given, then use prefix
++  if test "x$exec_prefix" = "xNONE"; then
++    exec_prefix=$prefix
++  fi
++
++  full_var="$FROM_VAR"
++  dnl loop until it doesn't change anymore
++  while true; do
++    new_full_var="`eval echo $full_var`"
++    if test "x$new_full_var" = "x$full_var"; then break; fi
++    full_var=$new_full_var
++  done
++
++  dnl clean up
++  full_var=$new_full_var
++  AC_SUBST([$1], "$full_var")
++
++  dnl restore prefix and exec_prefix
++  prefix=$prefix_save
++  exec_prefix=$exec_prefix_save
++])
+diff --git a/m4/ax_cxx_compile_stdcxx.m4 b/m4/ax_cxx_compile_stdcxx.m4
+new file mode 100644
+index 000000000..43087b2e6
+--- /dev/null
++++ b/m4/ax_cxx_compile_stdcxx.m4
+@@ -0,0 +1,951 @@
++# ===========================================================================
++#  https://www.gnu.org/software/autoconf-archive/ax_cxx_compile_stdcxx.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   AX_CXX_COMPILE_STDCXX(VERSION, [ext|noext], [mandatory|optional])
++#
++# DESCRIPTION
++#
++#   Check for baseline language coverage in the compiler for the specified
++#   version of the C++ standard.  If necessary, add switches to CXX and
++#   CXXCPP to enable support.  VERSION may be '11' (for the C++11 standard)
++#   or '14' (for the C++14 standard).
++#
++#   The second argument, if specified, indicates whether you insist on an
++#   extended mode (e.g. -std=gnu++11) or a strict conformance mode (e.g.
++#   -std=c++11).  If neither is specified, you get whatever works, with
++#   preference for an extended mode.
++#
++#   The third argument, if specified 'mandatory' or if left unspecified,
++#   indicates that baseline support for the specified C++ standard is
++#   required and that the macro should error out if no mode with that
++#   support is found.  If specified 'optional', then configuration proceeds
++#   regardless, after defining HAVE_CXX${VERSION} if and only if a
++#   supporting mode is found.
++#
++# LICENSE
++#
++#   Copyright (c) 2008 Benjamin Kosnik <bkoz@redhat.com>
++#   Copyright (c) 2012 Zack Weinberg <zackw@panix.com>
++#   Copyright (c) 2013 Roy Stogner <roystgnr@ices.utexas.edu>
++#   Copyright (c) 2014, 2015 Google Inc.; contributed by Alexey Sokolov <sokolov@google.com>
++#   Copyright (c) 2015 Paul Norman <penorman@mac.com>
++#   Copyright (c) 2015 Moritz Klammler <moritz@klammler.eu>
++#   Copyright (c) 2016, 2018 Krzesimir Nowak <qdlacz@gmail.com>
++#   Copyright (c) 2019 Enji Cooper <yaneurabeya@gmail.com>
++#
++#   Copying and distribution of this file, with or without modification, are
++#   permitted in any medium without royalty provided the copyright notice
++#   and this notice are preserved.  This file is offered as-is, without any
++#   warranty.
++
++#serial 11
++
++dnl  This macro is based on the code from the AX_CXX_COMPILE_STDCXX_11 macro
++dnl  (serial version number 13).
++
++AC_DEFUN([AX_CXX_COMPILE_STDCXX], [dnl
++  m4_if([$1], [11], [ax_cxx_compile_alternatives="11 0x"],
++        [$1], [14], [ax_cxx_compile_alternatives="14 1y"],
++        [$1], [17], [ax_cxx_compile_alternatives="17 1z"],
++        [m4_fatal([invalid first argument `$1' to AX_CXX_COMPILE_STDCXX])])dnl
++  m4_if([$2], [], [],
++        [$2], [ext], [],
++        [$2], [noext], [],
++        [m4_fatal([invalid second argument `$2' to AX_CXX_COMPILE_STDCXX])])dnl
++  m4_if([$3], [], [ax_cxx_compile_cxx$1_required=true],
++        [$3], [mandatory], [ax_cxx_compile_cxx$1_required=true],
++        [$3], [optional], [ax_cxx_compile_cxx$1_required=false],
++        [m4_fatal([invalid third argument `$3' to AX_CXX_COMPILE_STDCXX])])
++  AC_LANG_PUSH([C++])dnl
++  ac_success=no
++
++  m4_if([$2], [noext], [], [dnl
++  if test x$ac_success = xno; then
++    for alternative in ${ax_cxx_compile_alternatives}; do
++      switch="-std=gnu++${alternative}"
++      cachevar=AS_TR_SH([ax_cv_cxx_compile_cxx$1_$switch])
++      AC_CACHE_CHECK(whether $CXX supports C++$1 features with $switch,
++                     $cachevar,
++        [ac_save_CXX="$CXX"
++         CXX="$CXX $switch"
++         AC_COMPILE_IFELSE([AC_LANG_SOURCE([_AX_CXX_COMPILE_STDCXX_testbody_$1])],
++          [eval $cachevar=yes],
++          [eval $cachevar=no])
++         CXX="$ac_save_CXX"])
++      if eval test x\$$cachevar = xyes; then
++        CXX="$CXX $switch"
++        if test -n "$CXXCPP" ; then
++          CXXCPP="$CXXCPP $switch"
++        fi
++        ac_success=yes
++        break
++      fi
++    done
++  fi])
++
++  m4_if([$2], [ext], [], [dnl
++  if test x$ac_success = xno; then
++    dnl HP's aCC needs +std=c++11 according to:
++    dnl http://h21007.www2.hp.com/portal/download/files/unprot/aCxx/PDF_Release_Notes/769149-001.pdf
++    dnl Cray's crayCC needs "-h std=c++11"
++    for alternative in ${ax_cxx_compile_alternatives}; do
++      for switch in -std=c++${alternative} +std=c++${alternative} "-h std=c++${alternative}"; do
++        cachevar=AS_TR_SH([ax_cv_cxx_compile_cxx$1_$switch])
++        AC_CACHE_CHECK(whether $CXX supports C++$1 features with $switch,
++                       $cachevar,
++          [ac_save_CXX="$CXX"
++           CXX="$CXX $switch"
++           AC_COMPILE_IFELSE([AC_LANG_SOURCE([_AX_CXX_COMPILE_STDCXX_testbody_$1])],
++            [eval $cachevar=yes],
++            [eval $cachevar=no])
++           CXX="$ac_save_CXX"])
++        if eval test x\$$cachevar = xyes; then
++          CXX="$CXX $switch"
++          if test -n "$CXXCPP" ; then
++            CXXCPP="$CXXCPP $switch"
++          fi
++          ac_success=yes
++          break
++        fi
++      done
++      if test x$ac_success = xyes; then
++        break
++      fi
++    done
++  fi])
++  AC_LANG_POP([C++])
++  if test x$ax_cxx_compile_cxx$1_required = xtrue; then
++    if test x$ac_success = xno; then
++      AC_MSG_ERROR([*** A compiler with support for C++$1 language features is required.])
++    fi
++  fi
++  if test x$ac_success = xno; then
++    HAVE_CXX$1=0
++    AC_MSG_NOTICE([No compiler with C++$1 support was found])
++  else
++    HAVE_CXX$1=1
++    AC_DEFINE(HAVE_CXX$1,1,
++              [define if the compiler supports basic C++$1 syntax])
++  fi
++  AC_SUBST(HAVE_CXX$1)
++])
++
++
++dnl  Test body for checking C++11 support
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_11],
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_11
++)
++
++
++dnl  Test body for checking C++14 support
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_14],
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_11
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_14
++)
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_17],
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_11
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_14
++  _AX_CXX_COMPILE_STDCXX_testbody_new_in_17
++)
++
++dnl  Tests for new features in C++11
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_new_in_11], [[
++
++// If the compiler admits that it is not ready for C++11, why torture it?
++// Hopefully, this will speed up the test.
++
++#ifndef __cplusplus
++
++#error "This is not a C++ compiler"
++
++#elif __cplusplus < 201103L
++
++#error "This is not a C++11 compiler"
++
++#else
++
++namespace cxx11
++{
++
++  namespace test_static_assert
++  {
++
++    template <typename T>
++    struct check
++    {
++      static_assert(sizeof(int) <= sizeof(T), "not big enough");
++    };
++
++  }
++
++  namespace test_final_override
++  {
++
++    struct Base
++    {
++      virtual ~Base() {}
++      virtual void f() {}
++    };
++
++    struct Derived : public Base
++    {
++      virtual ~Derived() override {}
++      virtual void f() override {}
++    };
++
++  }
++
++  namespace test_double_right_angle_brackets
++  {
++
++    template < typename T >
++    struct check {};
++
++    typedef check<void> single_type;
++    typedef check<check<void>> double_type;
++    typedef check<check<check<void>>> triple_type;
++    typedef check<check<check<check<void>>>> quadruple_type;
++
++  }
++
++  namespace test_decltype
++  {
++
++    int
++    f()
++    {
++      int a = 1;
++      decltype(a) b = 2;
++      return a + b;
++    }
++
++  }
++
++  namespace test_type_deduction
++  {
++
++    template < typename T1, typename T2 >
++    struct is_same
++    {
++      static const bool value = false;
++    };
++
++    template < typename T >
++    struct is_same<T, T>
++    {
++      static const bool value = true;
++    };
++
++    template < typename T1, typename T2 >
++    auto
++    add(T1 a1, T2 a2) -> decltype(a1 + a2)
++    {
++      return a1 + a2;
++    }
++
++    int
++    test(const int c, volatile int v)
++    {
++      static_assert(is_same<int, decltype(0)>::value == true, "");
++      static_assert(is_same<int, decltype(c)>::value == false, "");
++      static_assert(is_same<int, decltype(v)>::value == false, "");
++      auto ac = c;
++      auto av = v;
++      auto sumi = ac + av + 'x';
++      auto sumf = ac + av + 1.0;
++      static_assert(is_same<int, decltype(ac)>::value == true, "");
++      static_assert(is_same<int, decltype(av)>::value == true, "");
++      static_assert(is_same<int, decltype(sumi)>::value == true, "");
++      static_assert(is_same<int, decltype(sumf)>::value == false, "");
++      static_assert(is_same<int, decltype(add(c, v))>::value == true, "");
++      return (sumf > 0.0) ? sumi : add(c, v);
++    }
++
++  }
++
++  namespace test_noexcept
++  {
++
++    int f() { return 0; }
++    int g() noexcept { return 0; }
++
++    static_assert(noexcept(f()) == false, "");
++    static_assert(noexcept(g()) == true, "");
++
++  }
++
++  namespace test_constexpr
++  {
++
++    template < typename CharT >
++    unsigned long constexpr
++    strlen_c_r(const CharT *const s, const unsigned long acc) noexcept
++    {
++      return *s ? strlen_c_r(s + 1, acc + 1) : acc;
++    }
++
++    template < typename CharT >
++    unsigned long constexpr
++    strlen_c(const CharT *const s) noexcept
++    {
++      return strlen_c_r(s, 0UL);
++    }
++
++    static_assert(strlen_c("") == 0UL, "");
++    static_assert(strlen_c("1") == 1UL, "");
++    static_assert(strlen_c("example") == 7UL, "");
++    static_assert(strlen_c("another\0example") == 7UL, "");
++
++  }
++
++  namespace test_rvalue_references
++  {
++
++    template < int N >
++    struct answer
++    {
++      static constexpr int value = N;
++    };
++
++    answer<1> f(int&)       { return answer<1>(); }
++    answer<2> f(const int&) { return answer<2>(); }
++    answer<3> f(int&&)      { return answer<3>(); }
++
++    void
++    test()
++    {
++      int i = 0;
++      const int c = 0;
++      static_assert(decltype(f(i))::value == 1, "");
++      static_assert(decltype(f(c))::value == 2, "");
++      static_assert(decltype(f(0))::value == 3, "");
++    }
++
++  }
++
++  namespace test_uniform_initialization
++  {
++
++    struct test
++    {
++      static const int zero {};
++      static const int one {1};
++    };
++
++    static_assert(test::zero == 0, "");
++    static_assert(test::one == 1, "");
++
++  }
++
++  namespace test_lambdas
++  {
++
++    void
++    test1()
++    {
++      auto lambda1 = [](){};
++      auto lambda2 = lambda1;
++      lambda1();
++      lambda2();
++    }
++
++    int
++    test2()
++    {
++      auto a = [](int i, int j){ return i + j; }(1, 2);
++      auto b = []() -> int { return '0'; }();
++      auto c = [=](){ return a + b; }();
++      auto d = [&](){ return c; }();
++      auto e = [a, &b](int x) mutable {
++        const auto identity = [](int y){ return y; };
++        for (auto i = 0; i < a; ++i)
++          a += b--;
++        return x + identity(a + b);
++      }(0);
++      return a + b + c + d + e;
++    }
++
++    int
++    test3()
++    {
++      const auto nullary = [](){ return 0; };
++      const auto unary = [](int x){ return x; };
++      using nullary_t = decltype(nullary);
++      using unary_t = decltype(unary);
++      const auto higher1st = [](nullary_t f){ return f(); };
++      const auto higher2nd = [unary](nullary_t f1){
++        return [unary, f1](unary_t f2){ return f2(unary(f1())); };
++      };
++      return higher1st(nullary) + higher2nd(nullary)(unary);
++    }
++
++  }
++
++  namespace test_variadic_templates
++  {
++
++    template <int...>
++    struct sum;
++
++    template <int N0, int... N1toN>
++    struct sum<N0, N1toN...>
++    {
++      static constexpr auto value = N0 + sum<N1toN...>::value;
++    };
++
++    template <>
++    struct sum<>
++    {
++      static constexpr auto value = 0;
++    };
++
++    static_assert(sum<>::value == 0, "");
++    static_assert(sum<1>::value == 1, "");
++    static_assert(sum<23>::value == 23, "");
++    static_assert(sum<1, 2>::value == 3, "");
++    static_assert(sum<5, 5, 11>::value == 21, "");
++    static_assert(sum<2, 3, 5, 7, 11, 13>::value == 41, "");
++
++  }
++
++  // http://stackoverflow.com/questions/13728184/template-aliases-and-sfinae
++  // Clang 3.1 fails with headers of libstd++ 4.8.3 when using std::function
++  // because of this.
++  namespace test_template_alias_sfinae
++  {
++
++    struct foo {};
++
++    template<typename T>
++    using member = typename T::member_type;
++
++    template<typename T>
++    void func(...) {}
++
++    template<typename T>
++    void func(member<T>*) {}
++
++    void test();
++
++    void test() { func<foo>(0); }
++
++  }
++
++}  // namespace cxx11
++
++#endif  // __cplusplus >= 201103L
++
++]])
++
++
++dnl  Tests for new features in C++14
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_new_in_14], [[
++
++// If the compiler admits that it is not ready for C++14, why torture it?
++// Hopefully, this will speed up the test.
++
++#ifndef __cplusplus
++
++#error "This is not a C++ compiler"
++
++#elif __cplusplus < 201402L
++
++#error "This is not a C++14 compiler"
++
++#else
++
++namespace cxx14
++{
++
++  namespace test_polymorphic_lambdas
++  {
++
++    int
++    test()
++    {
++      const auto lambda = [](auto&&... args){
++        const auto istiny = [](auto x){
++          return (sizeof(x) == 1UL) ? 1 : 0;
++        };
++        const int aretiny[] = { istiny(args)... };
++        return aretiny[0];
++      };
++      return lambda(1, 1L, 1.0f, '1');
++    }
++
++  }
++
++  namespace test_binary_literals
++  {
++
++    constexpr auto ivii = 0b0000000000101010;
++    static_assert(ivii == 42, "wrong value");
++
++  }
++
++  namespace test_generalized_constexpr
++  {
++
++    template < typename CharT >
++    constexpr unsigned long
++    strlen_c(const CharT *const s) noexcept
++    {
++      auto length = 0UL;
++      for (auto p = s; *p; ++p)
++        ++length;
++      return length;
++    }
++
++    static_assert(strlen_c("") == 0UL, "");
++    static_assert(strlen_c("x") == 1UL, "");
++    static_assert(strlen_c("test") == 4UL, "");
++    static_assert(strlen_c("another\0test") == 7UL, "");
++
++  }
++
++  namespace test_lambda_init_capture
++  {
++
++    int
++    test()
++    {
++      auto x = 0;
++      const auto lambda1 = [a = x](int b){ return a + b; };
++      const auto lambda2 = [a = lambda1(x)](){ return a; };
++      return lambda2();
++    }
++
++  }
++
++  namespace test_digit_separators
++  {
++
++    constexpr auto ten_million = 100'000'000;
++    static_assert(ten_million == 100000000, "");
++
++  }
++
++  namespace test_return_type_deduction
++  {
++
++    auto f(int& x) { return x; }
++    decltype(auto) g(int& x) { return x; }
++
++    template < typename T1, typename T2 >
++    struct is_same
++    {
++      static constexpr auto value = false;
++    };
++
++    template < typename T >
++    struct is_same<T, T>
++    {
++      static constexpr auto value = true;
++    };
++
++    int
++    test()
++    {
++      auto x = 0;
++      static_assert(is_same<int, decltype(f(x))>::value, "");
++      static_assert(is_same<int&, decltype(g(x))>::value, "");
++      return x;
++    }
++
++  }
++
++}  // namespace cxx14
++
++#endif  // __cplusplus >= 201402L
++
++]])
++
++
++dnl  Tests for new features in C++17
++
++m4_define([_AX_CXX_COMPILE_STDCXX_testbody_new_in_17], [[
++
++// If the compiler admits that it is not ready for C++17, why torture it?
++// Hopefully, this will speed up the test.
++
++#ifndef __cplusplus
++
++#error "This is not a C++ compiler"
++
++#elif __cplusplus < 201703L
++
++#error "This is not a C++17 compiler"
++
++#else
++
++#include <initializer_list>
++#include <utility>
++#include <type_traits>
++
++namespace cxx17
++{
++
++  namespace test_constexpr_lambdas
++  {
++
++    constexpr int foo = [](){return 42;}();
++
++  }
++
++  namespace test::nested_namespace::definitions
++  {
++
++  }
++
++  namespace test_fold_expression
++  {
++
++    template<typename... Args>
++    int multiply(Args... args)
++    {
++      return (args * ... * 1);
++    }
++
++    template<typename... Args>
++    bool all(Args... args)
++    {
++      return (args && ...);
++    }
++
++  }
++
++  namespace test_extended_static_assert
++  {
++
++    static_assert (true);
++
++  }
++
++  namespace test_auto_brace_init_list
++  {
++
++    auto foo = {5};
++    auto bar {5};
++
++    static_assert(std::is_same<std::initializer_list<int>, decltype(foo)>::value);
++    static_assert(std::is_same<int, decltype(bar)>::value);
++  }
++
++  namespace test_typename_in_template_template_parameter
++  {
++
++    template<template<typename> typename X> struct D;
++
++  }
++
++  namespace test_fallthrough_nodiscard_maybe_unused_attributes
++  {
++
++    int f1()
++    {
++      return 42;
++    }
++
++    [[nodiscard]] int f2()
++    {
++      [[maybe_unused]] auto unused = f1();
++
++      switch (f1())
++      {
++      case 17:
++        f1();
++        [[fallthrough]];
++      case 42:
++        f1();
++      }
++      return f1();
++    }
++
++  }
++
++  namespace test_extended_aggregate_initialization
++  {
++
++    struct base1
++    {
++      int b1, b2 = 42;
++    };
++
++    struct base2
++    {
++      base2() {
++        b3 = 42;
++      }
++      int b3;
++    };
++
++    struct derived : base1, base2
++    {
++        int d;
++    };
++
++    derived d1 {{1, 2}, {}, 4};  // full initialization
++    derived d2 {{}, {}, 4};      // value-initialized bases
++
++  }
++
++  namespace test_general_range_based_for_loop
++  {
++
++    struct iter
++    {
++      int i;
++
++      int& operator* ()
++      {
++        return i;
++      }
++
++      const int& operator* () const
++      {
++        return i;
++      }
++
++      iter& operator++()
++      {
++        ++i;
++        return *this;
++      }
++    };
++
++    struct sentinel
++    {
++      int i;
++    };
++
++    bool operator== (const iter& i, const sentinel& s)
++    {
++      return i.i == s.i;
++    }
++
++    bool operator!= (const iter& i, const sentinel& s)
++    {
++      return !(i == s);
++    }
++
++    struct range
++    {
++      iter begin() const
++      {
++        return {0};
++      }
++
++      sentinel end() const
++      {
++        return {5};
++      }
++    };
++
++    void f()
++    {
++      range r {};
++
++      for (auto i : r)
++      {
++        [[maybe_unused]] auto v = i;
++      }
++    }
++
++  }
++
++  namespace test_lambda_capture_asterisk_this_by_value
++  {
++
++    struct t
++    {
++      int i;
++      int foo()
++      {
++        return [*this]()
++        {
++          return i;
++        }();
++      }
++    };
++
++  }
++
++  namespace test_enum_class_construction
++  {
++
++    enum class byte : unsigned char
++    {};
++
++    byte foo {42};
++
++  }
++
++  namespace test_constexpr_if
++  {
++
++    template <bool cond>
++    int f ()
++    {
++      if constexpr(cond)
++      {
++        return 13;
++      }
++      else
++      {
++        return 42;
++      }
++    }
++
++  }
++
++  namespace test_selection_statement_with_initializer
++  {
++
++    int f()
++    {
++      return 13;
++    }
++
++    int f2()
++    {
++      if (auto i = f(); i > 0)
++      {
++        return 3;
++      }
++
++      switch (auto i = f(); i + 4)
++      {
++      case 17:
++        return 2;
++
++      default:
++        return 1;
++      }
++    }
++
++  }
++
++  namespace test_template_argument_deduction_for_class_templates
++  {
++
++    template <typename T1, typename T2>
++    struct pair
++    {
++      pair (T1 p1, T2 p2)
++        : m1 {p1},
++          m2 {p2}
++      {}
++
++      T1 m1;
++      T2 m2;
++    };
++
++    void f()
++    {
++      [[maybe_unused]] auto p = pair{13, 42u};
++    }
++
++  }
++
++  namespace test_non_type_auto_template_parameters
++  {
++
++    template <auto n>
++    struct B
++    {};
++
++    B<5> b1;
++    B<'a'> b2;
++
++  }
++
++  namespace test_structured_bindings
++  {
++
++    int arr[2] = { 1, 2 };
++    std::pair<int, int> pr = { 1, 2 };
++
++    auto f1() -> int(&)[2]
++    {
++      return arr;
++    }
++
++    auto f2() -> std::pair<int, int>&
++    {
++      return pr;
++    }
++
++    struct S
++    {
++      int x1 : 2;
++      volatile double y1;
++    };
++
++    S f3()
++    {
++      return {};
++    }
++
++    auto [ x1, y1 ] = f1();
++    auto& [ xr1, yr1 ] = f1();
++    auto [ x2, y2 ] = f2();
++    auto& [ xr2, yr2 ] = f2();
++    const auto [ x3, y3 ] = f3();
++
++  }
++
++  namespace test_exception_spec_type_system
++  {
++
++    struct Good {};
++    struct Bad {};
++
++    void g1() noexcept;
++    void g2();
++
++    template<typename T>
++    Bad
++    f(T*, T*);
++
++    template<typename T1, typename T2>
++    Good
++    f(T1*, T2*);
++
++    static_assert (std::is_same_v<Good, decltype(f(g1, g2))>);
++
++  }
++
++  namespace test_inline_variables
++  {
++
++    template<class T> void f(T)
++    {}
++
++    template<class T> inline T g(T)
++    {
++      return T{};
++    }
++
++    template<> inline void f<>(int)
++    {}
++
++    template<> int g<>(int)
++    {
++      return 5;
++    }
++
++  }
++
++}  // namespace cxx17
++
++#endif  // __cplusplus < 201703L
++
++]])
+diff --git a/m4/ax_pthread.m4 b/m4/ax_pthread.m4
+new file mode 100644
+index 000000000..e20a388ca
+--- /dev/null
++++ b/m4/ax_pthread.m4
+@@ -0,0 +1,309 @@
++# ===========================================================================
++#        http://www.gnu.org/software/autoconf-archive/ax_pthread.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   AX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
++#
++# DESCRIPTION
++#
++#   This macro figures out how to build C programs using POSIX threads. It
++#   sets the PTHREAD_LIBS output variable to the threads library and linker
++#   flags, and the PTHREAD_CFLAGS output variable to any special C compiler
++#   flags that are needed. (The user can also force certain compiler
++#   flags/libs to be tested by setting these environment variables.)
++#
++#   Also sets PTHREAD_CC to any special C compiler that is needed for
++#   multi-threaded programs (defaults to the value of CC otherwise). (This
++#   is necessary on AIX to use the special cc_r compiler alias.)
++#
++#   NOTE: You are assumed to not only compile your program with these flags,
++#   but also link it with them as well. e.g. you should link with
++#   $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS $LIBS
++#
++#   If you are only building threads programs, you may wish to use these
++#   variables in your default LIBS, CFLAGS, and CC:
++#
++#     LIBS="$PTHREAD_LIBS $LIBS"
++#     CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++#     CC="$PTHREAD_CC"
++#
++#   In addition, if the PTHREAD_CREATE_JOINABLE thread-attribute constant
++#   has a nonstandard name, defines PTHREAD_CREATE_JOINABLE to that name
++#   (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
++#
++#   Also HAVE_PTHREAD_PRIO_INHERIT is defined if pthread is found and the
++#   PTHREAD_PRIO_INHERIT symbol is defined when compiling with
++#   PTHREAD_CFLAGS.
++#
++#   ACTION-IF-FOUND is a list of shell commands to run if a threads library
++#   is found, and ACTION-IF-NOT-FOUND is a list of commands to run it if it
++#   is not found. If ACTION-IF-FOUND is not specified, the default action
++#   will define HAVE_PTHREAD.
++#
++#   Please let the authors know if this macro fails on any platform, or if
++#   you have any other suggestions or comments. This macro was based on work
++#   by SGJ on autoconf scripts for FFTW (http://www.fftw.org/) (with help
++#   from M. Frigo), as well as ac_pthread and hb_pthread macros posted by
++#   Alejandro Forero Cuervo to the autoconf macro repository. We are also
++#   grateful for the helpful feedback of numerous users.
++#
++#   Updated for Autoconf 2.68 by Daniel Richard G.
++#
++# LICENSE
++#
++#   Copyright (c) 2008 Steven G. Johnson <stevenj@alum.mit.edu>
++#   Copyright (c) 2011 Daniel Richard G. <skunk@iSKUNK.ORG>
++#
++#   This program is free software: you can redistribute it and/or modify it
++#   under the terms of the GNU General Public License as published by the
++#   Free Software Foundation, either version 3 of the License, or (at your
++#   option) any later version.
++#
++#   This program is distributed in the hope that it will be useful, but
++#   WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
++#   Public License for more details.
++#
++#   You should have received a copy of the GNU General Public License along
++#   with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++#   As a special exception, the respective Autoconf Macro's copyright owner
++#   gives unlimited permission to copy, distribute and modify the configure
++#   scripts that are the output of Autoconf when processing the Macro. You
++#   need not follow the terms of the GNU General Public License when using
++#   or distributing such scripts, even though portions of the text of the
++#   Macro appear in them. The GNU General Public License (GPL) does govern
++#   all other use of the material that constitutes the Autoconf Macro.
++#
++#   This special exception to the GPL applies to versions of the Autoconf
++#   Macro released by the Autoconf Archive. When you make and distribute a
++#   modified version of the Autoconf Macro, you may extend this special
++#   exception to the GPL to apply to your modified version as well.
++
++#serial 17
++
++AU_ALIAS([ACX_PTHREAD], [AX_PTHREAD])
++AC_DEFUN([AX_PTHREAD], [
++AC_REQUIRE([AC_CANONICAL_HOST])
++AC_LANG_PUSH([C])
++ax_pthread_ok=no
++
++# We used to check for pthread.h first, but this fails if pthread.h
++# requires special compiler flags (e.g. on True64 or Sequent).
++# It gets checked for in the link test anyway.
++
++# First of all, check if the user has set any of the PTHREAD_LIBS,
++# etcetera environment variables, and if threads linking works using
++# them:
++if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++        save_LIBS="$LIBS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
++        AC_TRY_LINK_FUNC(pthread_join, ax_pthread_ok=yes)
++        AC_MSG_RESULT($ax_pthread_ok)
++        if test x"$ax_pthread_ok" = xno; then
++                PTHREAD_LIBS=""
++                PTHREAD_CFLAGS=""
++        fi
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++fi
++
++# We must check for the threads library under a number of different
++# names; the ordering is very important because some systems
++# (e.g. DEC) have both -lpthread and -lpthreads, where one of the
++# libraries is broken (non-POSIX).
++
++# Create a list of thread flags to try.  Items starting with a "-" are
++# C compiler flags, and other items are library names, except for "none"
++# which indicates that we try without any flags at all, and "pthread-config"
++# which is a program returning the flags for the Pth emulation library.
++
++ax_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt pthread-config"
++
++# The ordering *is* (sometimes) important.  Some notes on the
++# individual items follow:
++
++# pthreads: AIX (must check this before -lpthread)
++# none: in case threads are in libc; should be tried before -Kthread and
++#       other compiler flags to prevent continual compiler warnings
++# -Kthread: Sequent (threads in libc, but -Kthread needed for pthread.h)
++# -kthread: FreeBSD kernel threads (preferred to -pthread since SMP-able)
++# lthread: LinuxThreads port on FreeBSD (also preferred to -pthread)
++# -pthread: Linux/gcc (kernel threads), BSD/gcc (userland threads)
++# -pthreads: Solaris/gcc
++# -mthreads: Mingw32/gcc, Lynx/gcc
++# -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
++#      doesn't hurt to check since this sometimes defines pthreads too;
++#      also defines -D_REENTRANT)
++#      ... -mt is also the pthreads flag for HP/aCC
++# pthread: Linux, etcetera
++# --thread-safe: KAI C++
++# pthread-config: use pthread-config program (for GNU Pth library)
++
++case "${host_cpu}-${host_os}" in
++        *solaris*)
++
++        # On Solaris (at least, for some versions), libc contains stubbed
++        # (non-functional) versions of the pthreads routines, so link-based
++        # tests will erroneously succeed.  (We need to link with -pthreads/-mt/
++        # -lpthread.)  (The stubs are missing pthread_cleanup_push, or rather
++        # a function called by this macro, so we could check for that, but
++        # who knows whether they'll stub that too in a future libc.)  So,
++        # we'll just look for -pthreads and -lpthread first:
++
++        ax_pthread_flags="-pthreads pthread -mt -pthread $ax_pthread_flags"
++        ;;
++
++        *-darwin*)
++        ax_pthread_flags="-pthread $ax_pthread_flags"
++        ;;
++esac
++
++if test x"$ax_pthread_ok" = xno; then
++for flag in $ax_pthread_flags; do
++
++        case $flag in
++                none)
++                AC_MSG_CHECKING([whether pthreads work without any flags])
++                ;;
++
++                -*)
++                AC_MSG_CHECKING([whether pthreads work with $flag])
++                PTHREAD_CFLAGS="$flag"
++                ;;
++
++                pthread-config)
++                AC_CHECK_PROG(ax_pthread_config, pthread-config, yes, no)
++                if test x"$ax_pthread_config" = xno; then continue; fi
++                PTHREAD_CFLAGS="`pthread-config --cflags`"
++                PTHREAD_LIBS="`pthread-config --ldflags` `pthread-config --libs`"
++                ;;
++
++                *)
++                AC_MSG_CHECKING([for the pthreads library -l$flag])
++                PTHREAD_LIBS="-l$flag"
++                ;;
++        esac
++
++        save_LIBS="$LIBS"
++        save_CFLAGS="$CFLAGS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++
++        # Check for various functions.  We must include pthread.h,
++        # since some functions may be macros.  (On the Sequent, we
++        # need a special flag -Kthread to make this header compile.)
++        # We check for pthread_join because it is in -lpthread on IRIX
++        # while pthread_create is in libc.  We check for pthread_attr_init
++        # due to DEC craziness with -lpthreads.  We check for
++        # pthread_cleanup_push because it is one of the few pthread
++        # functions on Solaris that doesn't have a non-functional libc stub.
++        # We try pthread_create on general principles.
++        AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <pthread.h>
++                        static void routine(void *a) { a = 0; }
++                        static void *start_routine(void *a) { return a; }],
++                       [pthread_t th; pthread_attr_t attr;
++                        pthread_create(&th, 0, start_routine, 0);
++                        pthread_join(th, 0);
++                        pthread_attr_init(&attr);
++                        pthread_cleanup_push(routine, 0);
++                        pthread_cleanup_pop(0) /* ; */])],
++                [ax_pthread_ok=yes],
++                [])
++
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++        AC_MSG_RESULT($ax_pthread_ok)
++        if test "x$ax_pthread_ok" = xyes; then
++                break;
++        fi
++
++        PTHREAD_LIBS=""
++        PTHREAD_CFLAGS=""
++done
++fi
++
++# Various other checks:
++if test "x$ax_pthread_ok" = xyes; then
++        save_LIBS="$LIBS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++
++        # Detect AIX lossage: JOINABLE attribute is called UNDETACHED.
++        AC_MSG_CHECKING([for joinable pthread attribute])
++        attr_name=unknown
++        for attr in PTHREAD_CREATE_JOINABLE PTHREAD_CREATE_UNDETACHED; do
++            AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <pthread.h>],
++                           [int attr = $attr; return attr /* ; */])],
++                [attr_name=$attr; break],
++                [])
++        done
++        AC_MSG_RESULT($attr_name)
++        if test "$attr_name" != PTHREAD_CREATE_JOINABLE; then
++            AC_DEFINE_UNQUOTED(PTHREAD_CREATE_JOINABLE, $attr_name,
++                               [Define to necessary symbol if this constant
++                                uses a non-standard name on your system.])
++        fi
++
++        AC_MSG_CHECKING([if more special flags are required for pthreads])
++        flag=no
++        case "${host_cpu}-${host_os}" in
++            *-aix* | *-freebsd* | *-darwin*) flag="-D_THREAD_SAFE";;
++            *-osf* | *-hpux*) flag="-D_REENTRANT";;
++            *solaris*)
++            if test "$GCC" = "yes"; then
++                flag="-D_REENTRANT"
++            else
++                flag="-mt -D_REENTRANT"
++            fi
++            ;;
++        esac
++        AC_MSG_RESULT(${flag})
++        if test "x$flag" != xno; then
++            PTHREAD_CFLAGS="$flag $PTHREAD_CFLAGS"
++        fi
++
++        AC_CACHE_CHECK([for PTHREAD_PRIO_INHERIT],
++            ax_cv_PTHREAD_PRIO_INHERIT, [
++                AC_LINK_IFELSE([
++                    AC_LANG_PROGRAM([[#include <pthread.h>]], [[int i = PTHREAD_PRIO_INHERIT;]])],
++                    [ax_cv_PTHREAD_PRIO_INHERIT=yes],
++                    [ax_cv_PTHREAD_PRIO_INHERIT=no])
++            ])
++        AS_IF([test "x$ax_cv_PTHREAD_PRIO_INHERIT" = "xyes"],
++            AC_DEFINE([HAVE_PTHREAD_PRIO_INHERIT], 1, [Have PTHREAD_PRIO_INHERIT.]))
++
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++        # More AIX lossage: must compile with xlc_r or cc_r
++        if test x"$GCC" != xyes; then
++          AC_CHECK_PROGS(PTHREAD_CC, xlc_r cc_r, ${CC})
++        else
++          PTHREAD_CC=$CC
++        fi
++else
++        PTHREAD_CC="$CC"
++fi
++
++AC_SUBST(PTHREAD_LIBS)
++AC_SUBST(PTHREAD_CFLAGS)
++AC_SUBST(PTHREAD_CC)
++
++# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
++if test x"$ax_pthread_ok" = xyes; then
++        ifelse([$1],,AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.]),[$1])
++        :
++else
++        ax_pthread_ok=no
++        $2
++fi
++AC_LANG_POP
++])dnl AX_PTHREAD
+diff --git a/man/Makefile.am b/man/Makefile.am
+new file mode 100644
+index 000000000..09366b73b
+--- /dev/null
++++ b/man/Makefile.am
+@@ -0,0 +1,19 @@
++SECTION="1"
++
++TEMPLATES=jamid.pod
++
++man_MANS=jamid.1
++
++POD2MAN=pod2man
++
++EXTRA_DIST=$(man_MANS) $(TEMPLATES)
++
++all: $(man_MANS)
++
++SUFFIXES=.pod .1
++
++.pod.1:
++	$(POD2MAN) --section=$(SECTION) --release=@VERSION@ --center "" $< > $@
++
++clean-local:
++	rm -rf *.1
+diff --git a/ringtones/Makefile.am b/ringtones/Makefile.am
+new file mode 100644
+index 000000000..db9ca98d1
+--- /dev/null
++++ b/ringtones/Makefile.am
+@@ -0,0 +1,13 @@
++jamiringtonesdir = $(datadir)/jami/ringtones
++dist_jamiringtones_DATA = \
++	01_AfroNigeria.opus \
++	02_AfroNigeria.opus \
++	03_AcousticGuitar.opus \
++	04_ElectricGuitar.opus \
++	05_AcousticIndia.opus \
++	06_RingSoft.opus \
++	07_RingTribal.opus \
++	08_RingFirefly.opus \
++	09_ElectroCloud.opus \
++	10_UrbanTrap.opus \
++	default.opus
+diff --git a/src/Makefile.am b/src/Makefile.am
+new file mode 100644
+index 000000000..2ca723636
+--- /dev/null
++++ b/src/Makefile.am
+@@ -0,0 +1,154 @@
++include $(top_srcdir)/globals.mk
++
++noinst_LTLIBRARIES=
++noinst_HEADERS=
++nobase_include_HEADERS=
++
++lib_LTLIBRARIES = libjami.la
++libjami_la_LIBADD=
++
++include ./client/Makefile.am
++include ./config/Makefile.am
++include ./connectivity/Makefile.am
++include ./im/Makefile.am
++include ./jamidht/Makefile.am
++include ./media/Makefile.am
++include ./plugin/Makefile.am
++include ./sip/Makefile.am
++
++# libjami
++
++if ENABLE_PLUGIN
++if HAVE_OSX
++LIBARCHIVE = $(MINIZIP_LIBS)
++else
++LIBARCHIVE = $(ARCHIVE_LIBS)
++endif
++endif
++
++libjami_la_LIBADD += \
++	$(ALSA_LIBS) \
++	$(PULSEAUDIO_LIBS) \
++	$(PORTAUDIO_LIBS) \
++	$(SPEEXDSP_LIBS) \
++	$(DHTNET_LIBS) \
++	$(PJPROJECT_LIBS) \
++	$(OPENDHT_LIBS) \
++	$(LIBARCHIVE) \
++	$(LIBUPNP_LIBS) \
++	$(LIBGIT2_LIBS) \
++	$(LIBAVCODEC_LIBS) \
++	$(LIBAVFORMAT_LIBS) \
++	$(LIBAVDEVICE_LIBS) \
++	$(LIBAVFILTER_LIBS) \
++	$(LIBSWRESAMPLE_LIBS) \
++	$(LIBSWSCALE_LIBS) \
++	$(LIBAVUTIL_LIBS) \
++	$(WEBRTC_LIBS) \
++	$(YAMLCPP_LIBS) \
++	$(JSONCPP_LIBS) \
++	$(NETTLE_LIBS) \
++	$(SECP256K1_LIBS) \
++	$(FMT_LIBS) \
++	$(LIBSSL_LIBS) \
++	$(LIBCRYPTO_LIBS) \
++	$(SIMDUTF_LIBS) \
++	$(ZLIB_LIBS)
++
++# XXX: It seems this should be the default value when otherwise left
++# unspecified, but for some reason this is required otherwise the
++# shared object fails to link against ffmpeg's libswscale.a.
++libjami_la_LDFLAGS = $(AM_LDFLAGS)
++
++if HAVE_WIN32
++libjami_la_LDFLAGS += -no-undefined -avoid-version
++endif
++
++if HAVE_OSX
++#FIXME necessary for -lintl
++libjami_la_LDFLAGS += -L/usr/local/opt/gettext/lib
++endif
++
++libjami_la_SOURCES = \
++		buildinfo.cpp \
++		conference.cpp \
++		conference_protocol.cpp \
++		account_factory.cpp \
++		call_factory.cpp \
++		preferences.cpp \
++		manager.cpp \
++		call.cpp \
++		gittransport.cpp \
++		account.cpp \
++		account_config.cpp \
++		logger.cpp \
++		fileutils.cpp \
++		archiver.cpp \
++		threadloop.cpp \
++		vcard.cpp \
++		threadloop.h \
++		conference.h \
++		conference_protocol.h \
++		account_factory.h \
++		call_factory.h \
++		preferences.h \
++		manager.h \
++		gittransport.h \
++		account.h \
++		call.h \
++		logger.h \
++		fileutils.h \
++		archiver.h \
++		noncopyable.h \
++		global_instance.h \
++		compiler_intrinsics.h \
++		account_schema.h \
++		registration_states.h \
++		ring_api.cpp \
++		rational.h \
++		base64.h \
++		base64.cpp \
++		data_transfer.cpp \
++		data_transfer.h \
++		scheduled_executor.h \
++		scheduled_executor.cpp \
++		string_utils.cpp \
++		string_utils.h \
++		uri.h \
++		uri.cpp \
++		vcard.h
++
++if HAVE_WIN32
++libjami_la_SOURCES += \
++		dlfcn.c \
++		winsyslog.c
++endif
++
++nobase_include_HEADERS += \
++	./jami/account_const.h \
++	./jami/call_const.h \
++	./jami/callmanager_interface.h \
++	./jami/configurationmanager_interface.h \
++	./jami/conversation_interface.h \
++	./jami/datatransfer_interface.h \
++	./jami/def.h \
++	./jami/jami.h \
++	./jami/media_const.h \
++	./jami/presence_const.h \
++	./jami/presencemanager_interface.h \
++	./jami/security_const.h \
++	./jami/trace-tools.h
++
++if ENABLE_PLUGIN
++nobase_include_HEADERS += \
++		./jami/plugin_manager_interface.h
++endif
++if ENABLE_VIDEO
++nobase_include_HEADERS += \
++		./jami/videomanager_interface.h
++endif
++
++if ENABLE_TRACEPOINTS
++libjami_la_SOURCES += jami/tracepoint.h jami/tracepoint-def.h jami/tracepoint.c
++libjami_la_LIBADD  += $(LTTNG_LIBS)
++endif
+diff --git a/src/client/Makefile.am b/src/client/Makefile.am
+new file mode 100644
+index 000000000..fc51caa80
+--- /dev/null
++++ b/src/client/Makefile.am
+@@ -0,0 +1,25 @@
++noinst_LTLIBRARIES += libclient.la
++
++noinst_HEADERS += \
++	./client/ring_signal.h
++
++PRESENCE_SRC = ./client/presencemanager.cpp
++
++VIDEO_SRC = ./client/videomanager.cpp
++noinst_HEADERS += ./client/videomanager.h
++
++if ENABLE_PLUGIN
++PLUGIN_SRC = ./client/plugin_manager_interface.cpp
++endif
++
++libclient_la_SOURCES = \
++	./client/ring_signal.cpp \
++	./client/callmanager.cpp \
++	./client/configurationmanager.cpp \
++	./client/datatransfer.cpp \
++	./client/conversation_interface.cpp \
++	$(PLUGIN_SRC) \
++	$(PRESENCE_SRC) \
++	$(VIDEO_SRC)
++
++libjami_la_LIBADD += libclient.la
+diff --git a/src/config/Makefile.am b/src/config/Makefile.am
+new file mode 100644
+index 000000000..03aa40582
+--- /dev/null
++++ b/src/config/Makefile.am
+@@ -0,0 +1,8 @@
++noinst_LTLIBRARIES += libconfig.la
++
++libconfig_la_SOURCES = \
++	./config/serializable.h \
++	./config/yamlparser.h \
++	./config/yamlparser.cpp
++
++libjami_la_LIBADD += libconfig.la
+diff --git a/src/connectivity/Makefile.am b/src/connectivity/Makefile.am
+new file mode 100644
+index 000000000..1c6b47c92
+--- /dev/null
++++ b/src/connectivity/Makefile.am
+@@ -0,0 +1,13 @@
++noinst_LTLIBRARIES += libconnectivity.la
++
++include ./connectivity/security/Makefile.am
++
++libconnectivity_la_SOURCES = \
++		./connectivity/ip_utils.cpp \
++		./connectivity/ip_utils.h \
++		./connectivity/sip_utils.cpp \
++		./connectivity/sip_utils.h \
++		./connectivity/utf8_utils.cpp \
++		./connectivity/utf8_utils.h
++
++libjami_la_LIBADD += libconnectivity.la
+diff --git a/src/connectivity/security/Makefile.am b/src/connectivity/security/Makefile.am
+new file mode 100644
+index 000000000..3ee38e652
+--- /dev/null
++++ b/src/connectivity/security/Makefile.am
+@@ -0,0 +1,11 @@
++noinst_LTLIBRARIES += libsecurity.la
++
++libsecurity_la_CXXFLAGS = -I$(top_srcdir)/src $(AM_CXXFLAGS)
++
++libsecurity_la_SOURCES = \
++		./connectivity/security/tlsvalidator.cpp \
++		./connectivity/security/tlsvalidator.h \
++		./connectivity/security/memory.cpp \
++		./connectivity/security/memory.h
++
++libjami_la_LIBADD += libsecurity.la
+diff --git a/src/im/Makefile.am b/src/im/Makefile.am
+new file mode 100644
+index 000000000..a86fe69b6
+--- /dev/null
++++ b/src/im/Makefile.am
+@@ -0,0 +1,9 @@
++noinst_LTLIBRARIES += libim.la
++
++libim_la_SOURCES = \
++	./im/instant_messaging.cpp \
++	./im/message_engine.cpp \
++	./im/instant_messaging.h \
++	./im/message_engine.h
++
++libjami_la_LIBADD += libim.la
+diff --git a/src/jamidht/Makefile.am b/src/jamidht/Makefile.am
+new file mode 100644
+index 000000000..0f15a82f1
+--- /dev/null
++++ b/src/jamidht/Makefile.am
+@@ -0,0 +1,63 @@
++noinst_LTLIBRARIES += libjamiacc.la
++
++libjamiacc_la_LIBADD=
++
++AM_CPPFLAGS += -I$(top_srcdir)/src/jamidht/eth
++
++libjamiacc_la_SOURCES = \
++	./jamidht/abstract_sip_transport.h \
++	./jamidht/jamiaccount.cpp \
++	./jamidht/jamiaccount.h \
++	./jamidht/jamiaccount_config.cpp \
++	./jamidht/jamiaccount_config.h \
++	./jamidht/channeled_transport.h \
++	./jamidht/channeled_transport.cpp \
++	./jamidht/conversation.h \
++	./jamidht/conversation.cpp \
++	./jamidht/conversationrepository.h \
++	./jamidht/conversationrepository.cpp \
++	./jamidht/gitserver.h \
++	./jamidht/gitserver.cpp \
++	./jamidht/channel_handler.h \
++	./jamidht/conversation_channel_handler.h \
++	./jamidht/conversation_channel_handler.cpp \
++	./jamidht/conversation_module.h \
++	./jamidht/conversation_module.cpp \
++	./jamidht/accountarchive.cpp \
++	./jamidht/accountarchive.h \
++	./jamidht/jami_contact.h \
++	./jamidht/contact_list.h \
++	./jamidht/contact_list.cpp \
++	./jamidht/account_manager.h \
++	./jamidht/account_manager.cpp \
++	./jamidht/message_channel_handler.h \
++	./jamidht/message_channel_handler.cpp \
++	./jamidht/archive_account_manager.h \
++	./jamidht/archive_account_manager.cpp \
++	./jamidht/server_account_manager.h \
++	./jamidht/server_account_manager.cpp \
++	./jamidht/sync_channel_handler.h \
++	./jamidht/sync_channel_handler.cpp \
++	./jamidht/sync_module.h \
++	./jamidht/sync_module.cpp \
++	./jamidht/transfer_channel_handler.h \
++	./jamidht/transfer_channel_handler.cpp \
++	./jamidht/swarm/routing_table.h \
++	./jamidht/swarm/routing_table.cpp \
++	./jamidht/swarm/swarm_protocol.h \
++	./jamidht/swarm/swarm_protocol.cpp \
++	./jamidht/swarm/swarm_channel_handler.h \
++	./jamidht/swarm/swarm_channel_handler.cpp \
++	./jamidht/swarm/swarm_manager.h \
++	./jamidht/swarm/swarm_manager.cpp \
++	./jamidht/typers.h \
++	./jamidht/typers.cpp \
++	./jamidht/auth_channel_handler.h \
++	./jamidht/auth_channel_handler.cpp \
++	./jamidht/namedirectory.cpp \
++	./jamidht/namedirectory.h
++
++include ./jamidht/eth/libdevcore/Makefile.am
++include ./jamidht/eth/libdevcrypto/Makefile.am
++
++libjami_la_LIBADD += libjamiacc.la
+diff --git a/src/jamidht/eth/libdevcore/Makefile.am b/src/jamidht/eth/libdevcore/Makefile.am
+new file mode 100644
+index 000000000..ee106a89d
+--- /dev/null
++++ b/src/jamidht/eth/libdevcore/Makefile.am
+@@ -0,0 +1,14 @@
++noinst_LTLIBRARIES += libdevcore.la
++
++libdevcore_la_SOURCES = \
++	./jamidht/eth/libdevcore/SHA3.cpp \
++	./jamidht/eth/libdevcore/CommonData.cpp
++
++noinst_HEADERS += \
++	./jamidht/eth/libdevcore/FixedHash.h \
++	./jamidht/eth/libdevcore/Common.h \
++	./jamidht/eth/libdevcore/SHA3.h \
++	./jamidht/eth/libdevcore/CommonData.h \
++	./jamidht/eth/libdevcore/Address.h
++
++libjamiacc_la_LIBADD += libdevcore.la
+diff --git a/src/jamidht/eth/libdevcrypto/Makefile.am b/src/jamidht/eth/libdevcrypto/Makefile.am
+new file mode 100644
+index 000000000..a86674bbe
+--- /dev/null
++++ b/src/jamidht/eth/libdevcrypto/Makefile.am
+@@ -0,0 +1,6 @@
++noinst_LTLIBRARIES += libdevcrypto.la
++
++libdevcrypto_la_SOURCES = ./jamidht/eth/libdevcrypto/Common.cpp
++noinst_HEADERS += ./jamidht/eth/libdevcrypto/Common.h
++
++libjamiacc_la_LIBADD += libdevcrypto.la
+diff --git a/src/media/Makefile.am b/src/media/Makefile.am
+new file mode 100644
+index 000000000..b5d4e5f73
+--- /dev/null
++++ b/src/media/Makefile.am
+@@ -0,0 +1,50 @@
++noinst_LTLIBRARIES += libmedia.la
++
++libmedia_la_LIBADD=
++
++libmedia_la_SOURCES = \
++	./media/libav_utils.cpp \
++	./media/socket_pair.cpp \
++	./media/media_buffer.cpp \
++	./media/media_decoder.cpp \
++	./media/media_encoder.cpp \
++	./media/media_io_handle.cpp \
++	./media/media_codec.cpp \
++	./media/media_attribute.cpp \
++	./media/system_codec_container.cpp \
++	./media/srtp.c \
++	./media/recordable.cpp \
++	./media/media_filter.cpp \
++	./media/media_recorder.cpp \
++	./media/localrecorder.cpp \
++	./media/media_player.cpp \
++	./media/localrecordermanager.cpp \
++	./media/congestion_control.cpp
++
++noinst_HEADERS += \
++	./media/rtp_session.h \
++	./media/libav_utils.h \
++	./media/libav_deps.h \
++	./media/socket_pair.h \
++	./media/media_buffer.h \
++	./media/media_decoder.h \
++	./media/media_encoder.h \
++	./media/media_io_handle.h \
++	./media/media_device.h \
++	./media/media_codec.h \
++	./media/system_codec_container.h \
++	./media/srtp.h \
++	./media/recordable.h \
++	./media/decoder_finder.h \
++	./media/media_filter.h \
++	./media/media_stream.h \
++	./media/media_recorder.h \
++	./media/localrecorder.h \
++	./media/media_player.h \
++	./media/localrecordermanager.h \
++	./media/congestion_control.h
++
++include ./media/audio/Makefile.am
++include ./media/video/Makefile.am
++
++libjami_la_LIBADD += libmedia.la
+diff --git a/src/media/audio/Makefile.am b/src/media/audio/Makefile.am
+new file mode 100644
+index 000000000..4351f6f7a
+--- /dev/null
++++ b/src/media/audio/Makefile.am
+@@ -0,0 +1,77 @@
++noinst_LTLIBRARIES += libaudio.la
++libaudio_la_LIBADD=
++
++libaudio_la_SOURCES = $(RING_SPEEXDSP_SRC) \
++		./media/audio/audio_input.cpp \
++		./media/audio/audio_frame_resizer.cpp \
++		./media/audio/audioloop.cpp \
++		./media/audio/ringbuffer.cpp \
++		./media/audio/ringbufferpool.cpp \
++		./media/audio/audiolayer.cpp \
++		./media/audio/resampler.cpp \
++		./media/audio/audio_sender.cpp \
++		./media/audio/audio_receive_thread.cpp \
++		./media/audio/audio_rtp_session.cpp \
++		./media/audio/tonecontrol.cpp
++
++libaudio_la_CXXFLAGS = \
++	-I$(top_srcdir)/src \
++	$(AM_CXXFLAGS)
++
++libaudio_la_LDFLAGS = $(AM_LDFLAGS)
++
++if BUILD_SPEEXDSP
++libaudio_la_CXXFLAGS += @SPEEXDSP_CFLAGS@
++libaudio_la_LDFLAGS += @SPEEXDSP_LIBS@
++endif
++
++if HAVE_WEBRTC_AP
++libaudio_la_CXXFLAGS += @WEBRTC_CFLAGS@
++endif
++
++noinst_HEADERS += $(RING_SPEEXDSP_HEAD) \
++		./media/audio/audio_input.h \
++		./media/audio/audio_frame_resizer.h \
++		./media/audio/audioloop.h \
++		./media/audio/ringbuffer.h \
++		./media/audio/ringbufferpool.h \
++		./media/audio/audiolayer.h \
++		./media/audio/resampler.h \
++		./media/audio/audio_sender.h \
++		./media/audio/audio_receive_thread.h \
++		./media/audio/audio_rtp_session.h \
++		./media/audio/tonecontrol.h
++
++
++include ./media/audio/sound/Makefile.am
++include ./media/audio/audio-processing/Makefile.am
++
++if BUILD_OPENSL
++include ./media/audio/opensl/Makefile.am
++endif
++
++if BUILD_ALSA
++include ./media/audio/alsa/Makefile.am
++endif
++
++if BUILD_PULSE
++include ./media/audio/pulseaudio/Makefile.am
++endif
++
++if BUILD_JACK
++include ./media/audio/jack/Makefile.am
++endif
++
++if HAVE_OSX
++include ./media/audio/coreaudio/Makefile.am
++endif
++
++if HAVE_IOS
++include ./media/audio/coreaudio/Makefile.am
++endif
++
++if HAVE_PORTAUDIO
++include ./media/audio/portaudio/Makefile.am
++endif
++
++libmedia_la_LIBADD += libaudio.la
+diff --git a/src/media/audio/alsa/Makefile.am b/src/media/audio/alsa/Makefile.am
+new file mode 100644
+index 000000000..d21616caa
+--- /dev/null
++++ b/src/media/audio/alsa/Makefile.am
+@@ -0,0 +1,7 @@
++noinst_LTLIBRARIES += libalsalayer.la
++
++libalsalayer_la_SOURCES = ./media/audio/alsa/alsalayer.cpp
++
++noinst_HEADERS += ./media/audio/alsa/alsalayer.h
++
++libaudio_la_LIBADD += libalsalayer.la
+diff --git a/src/media/audio/audio-processing/Makefile.am b/src/media/audio/audio-processing/Makefile.am
+new file mode 100644
+index 000000000..1002802a8
+--- /dev/null
++++ b/src/media/audio/audio-processing/Makefile.am
+@@ -0,0 +1,24 @@
++noinst_LTLIBRARIES += libaudioprocessing.la
++
++EC_SRC = ./media/audio/audio-processing/null_audio_processor.cpp
++EC_HDR = ./media/audio/audio-processing/null_audio_processor.h
++
++if BUILD_SPEEXDSP
++EC_SRC += ./media/audio/audio-processing/speex.cpp
++EC_HDR += ./media/audio/audio-processing/speex.h
++endif
++
++if HAVE_WEBRTC_AP
++EC_SRC += ./media/audio/audio-processing/webrtc.cpp
++EC_HDR += ./media/audio/audio-processing/webrtc.h
++libaudioprocessing_la_CXXFLAGS = @WEBRTC_CFLAGS@ $(AM_CXXFLAGS)
++endif
++
++libaudioprocessing_la_SOURCES = \
++	$(EC_SRC)
++
++noinst_HEADERS += \
++	./media/audio/audio-processing/audio_processor.h \
++	$(EC_HDR)
++
++libaudio_la_LIBADD += libaudioprocessing.la
+diff --git a/src/media/audio/coreaudio/Makefile.am b/src/media/audio/coreaudio/Makefile.am
+new file mode 100644
+index 000000000..b8cd92cfd
+--- /dev/null
++++ b/src/media/audio/coreaudio/Makefile.am
+@@ -0,0 +1,23 @@
++noinst_LTLIBRARIES += libcoreaudiolayer.la
++
++libcoreaudiolayer_la_SOURCES=
++
++if HAVE_OSX
++libcoreaudiolayer_la_SOURCES += \
++	./media/audio/coreaudio/osx/corelayer.mm \
++	./media/audio/coreaudio/osx/corelayer.h \
++	./media/audio/coreaudio/osx/audiodevice.cpp \
++	./media/audio/coreaudio/osx/audiodevice.h
++endif
++
++if HAVE_IOS
++libcoreaudiolayer_la_SOURCES += \
++	./media/audio/coreaudio/ios/corelayer.mm \
++	./media/audio/coreaudio/ios/corelayer.h
++endif
++
++libcoreaudiolayer_la_CXXFLAGS = \
++	-I$(top_srcdir)/src \
++	$(AM_CXXFLAGS)
++
++libaudio_la_LIBADD += libcoreaudiolayer.la
+diff --git a/src/media/audio/jack/Makefile.am b/src/media/audio/jack/Makefile.am
+new file mode 100644
+index 000000000..a1e94abe6
+--- /dev/null
++++ b/src/media/audio/jack/Makefile.am
+@@ -0,0 +1,8 @@
++noinst_LTLIBRARIES += libjacklayer.la
++
++libjacklayer_la_SOURCES = \
++	./media/audio/jack/jacklayer.cpp \
++	./media/audio/jack/jacklayer.h
++
++libaudio_la_LDFLAGS += @JACK_LIBS@ -pthread
++libaudio_la_LIBADD += libjacklayer.la
+diff --git a/src/media/audio/opensl/Makefile.am b/src/media/audio/opensl/Makefile.am
+new file mode 100644
+index 000000000..f44cd196a
+--- /dev/null
++++ b/src/media/audio/opensl/Makefile.am
+@@ -0,0 +1,17 @@
++noinst_LTLIBRARIES += libopensl.la
++
++libopensl_la_SOURCES = \
++	./media/audio/opensl/opensllayer.cpp \
++	./media/audio/opensl/audio_player.cpp \
++	./media/audio/opensl/audio_recorder.cpp
++
++noinst_HEADERS += \
++	./media/audio/opensl/opensllayer.h \
++	./media/audio/opensl/audio_common.h \
++	./media/audio/opensl/audio_player.h \
++	./media/audio/opensl/audio_recorder.h \
++	./media/audio/opensl/buf_manager.h
++
++
++libaudio_la_LDFLAGS += -lOpenSLES
++libaudio_la_LIBADD += libopensl.la
+diff --git a/src/media/audio/portaudio/Makefile.am b/src/media/audio/portaudio/Makefile.am
+new file mode 100644
+index 000000000..2605d18ae
+--- /dev/null
++++ b/src/media/audio/portaudio/Makefile.am
+@@ -0,0 +1,11 @@
++noinst_LTLIBRARIES += libportaudiolayer.la
++
++libportaudiolayer_la_SOURCES = \
++		./media/audio/portaudio/portaudiolayer.cpp
++
++
++noinst_HEADERS += \
++		./media/audio/portaudio/portaudiolayer.h
++
++libaudio_la_LDFLAGS += @PORTAUDIO_LIBS@
++libaudio_la_LIBADD += libportaudiolayer.la
+diff --git a/src/media/audio/pulseaudio/Makefile.am b/src/media/audio/pulseaudio/Makefile.am
+new file mode 100644
+index 000000000..bb2ec41d7
+--- /dev/null
++++ b/src/media/audio/pulseaudio/Makefile.am
+@@ -0,0 +1,12 @@
++noinst_LTLIBRARIES += libpulselayer.la
++
++libpulselayer_la_SOURCES = \
++		./media/audio/pulseaudio/audiostream.cpp \
++		./media/audio/pulseaudio/pulselayer.cpp
++
++
++noinst_HEADERS += \
++		./media/audio/pulseaudio/audiostream.h \
++		./media/audio/pulseaudio/pulselayer.h
++
++libaudio_la_LIBADD += libpulselayer.la
+diff --git a/src/media/audio/sound/Makefile.am b/src/media/audio/sound/Makefile.am
+new file mode 100644
+index 000000000..14e7bd373
+--- /dev/null
++++ b/src/media/audio/sound/Makefile.am
+@@ -0,0 +1,17 @@
++noinst_LTLIBRARIES += libsound.la
++
++libsound_la_SOURCES = \
++		./media/audio/sound/audiofile.cpp \
++		./media/audio/sound/tone.cpp \
++		./media/audio/sound/tonelist.cpp \
++		./media/audio/sound/dtmf.cpp \
++		./media/audio/sound/dtmfgenerator.cpp
++
++noinst_HEADERS += \
++	./media/audio/sound/audiofile.h \
++	./media/audio/sound/tone.h \
++	./media/audio/sound/tonelist.h \
++	./media/audio/sound/dtmfgenerator.h \
++	./media/audio/sound/dtmf.h
++
++libaudio_la_LIBADD += libsound.la
+diff --git a/src/media/video/Makefile.am b/src/media/video/Makefile.am
+new file mode 100644
+index 000000000..ee5da649e
+--- /dev/null
++++ b/src/media/video/Makefile.am
+@@ -0,0 +1,73 @@
++if ENABLE_VIDEO
++
++noinst_LTLIBRARIES += libvideo.la
++
++libvideo_la_LIBADD=
++
++libvideo_la_SOURCES = \
++	./media/video/video_device.h \
++	./media/video/video_device_monitor.cpp video_device_monitor.h \
++	./media/video/video_base.cpp video_base.h \
++	./media/video/video_scaler.cpp video_scaler.h \
++	./media/video/video_mixer.cpp video_mixer.h \
++	./media/video/video_input.cpp video_input.h \
++	./media/video/video_receive_thread.cpp video_receive_thread.h \
++	./media/video/video_sender.cpp video_sender.h \
++	./media/video/video_rtp_session.cpp video_rtp_session.h \
++	./media/video/sinkclient.cpp sinkclient.h \
++	./media/video/filter_transpose.cpp filter_transpose.h
++
++if ENABLE_HWACCEL
++libvideo_la_SOURCES += ./media/video/accel.cpp ./media/video/accel.h
++endif
++
++libvideo_la_LIBADD += \
++	@LIBAVCODEC_LIBS@ \
++	@LIBAVFORMAT_LIBS@ \
++	@LIBAVDEVICE_LIBS@ \
++	@LIBSWSCALE_LIBS@ \
++	@LIBAVUTIL_LIBS@
++
++libvideo_la_CFLAGS = \
++	@LIBAVCODEC_CFLAGS@ \
++	@LIBAVFORMAT_CFLAGS@ \
++	@LIBAVDEVICE_CFLAGS@ \
++	@LIBSWSCALE_CFLAGS@ \
++	$(AM_CFLAGS)
++
++libvideo_la_CXXFLAGS =  \
++	@LIBAVCODEC_CFLAGS@ \
++	@LIBAVFORMAT_CFLAGS@ \
++	@LIBAVDEVICE_CFLAGS@ \
++	@LIBSWSCALE_CFLAGS@ \
++	$(AM_CXXFLAGS)
++
++if HAVE_WIN32
++libvideo_la_CXXFLAGS += -static
++libvideo_la_CFLAGS += -static
++endif
++
++
++if HAVE_LINUX
++if HAVE_ANDROID
++include ./media/video/androidvideo/Makefile.am
++else
++include ./media/video/v4l2/Makefile.am
++endif
++endif
++
++if HAVE_OSX
++include ./media/video/osxvideo/Makefile.am
++endif
++
++if HAVE_IOS
++include ./media/video/iosvideo/Makefile.am
++endif
++
++if HAVE_WIN32
++include ./media/video/winvideo/Makefile.am
++endif
++
++libmedia_la_LIBADD += libvideo.la
++
++endif # ENABLE_VIDEO
+diff --git a/src/media/video/androidvideo/Makefile.am b/src/media/video/androidvideo/Makefile.am
+new file mode 100644
+index 000000000..94d320f4c
+--- /dev/null
++++ b/src/media/video/androidvideo/Makefile.am
+@@ -0,0 +1,10 @@
++noinst_LTLIBRARIES += libandroidvideo.la
++
++libandroidvideo_la_SOURCES = \
++	./media/video/androidvideo/video_device_impl.cpp \
++	./media/video/androidvideo/video_device_monitor_impl.cpp
++
++#AM_CXXFLAGS = @UDEV_CFLAGS@
++#libandroidvideo_la_LIBADD = @UDEV_LIBS@
++
++libvideo_la_LIBADD += libandroidvideo.la
+diff --git a/src/media/video/iosvideo/Makefile.am b/src/media/video/iosvideo/Makefile.am
+new file mode 100644
+index 000000000..0ae0a4dba
+--- /dev/null
++++ b/src/media/video/iosvideo/Makefile.am
+@@ -0,0 +1,10 @@
++noinst_LTLIBRARIES += libiosvideo.la
++
++libiosvideo_la_SOURCES = \
++	./media/video/iosvideo/video_device_impl.cpp \
++	./media/video/iosvideo/video_device_monitor_impl.cpp
++
++libvideo_la_LIBADD += libiosvideo.la
++
++#AM_CXXFLAGS = @UDEV_CFLAGS@
++#libiosvideo_la_LIBADD = @UDEV_LIBS@
+diff --git a/src/media/video/osxvideo/Makefile.am b/src/media/video/osxvideo/Makefile.am
+new file mode 100644
+index 000000000..fa520a0a6
+--- /dev/null
++++ b/src/media/video/osxvideo/Makefile.am
+@@ -0,0 +1,9 @@
++noinst_LTLIBRARIES += libosxvideo.la
++
++libosxvideo_la_SOURCES = \
++	./media/video/osxvideo/video_device_impl.mm \
++	./media/video/osxvideo/video_device_monitor_impl.mm
++
++libosxvideo_la_AM_OBJCXXFLAGS = -std=c++17
++
++libvideo_la_LIBADD += libosxvideo.la
+diff --git a/src/media/video/v4l2/Makefile.am b/src/media/video/v4l2/Makefile.am
+new file mode 100644
+index 000000000..9caf8aeee
+--- /dev/null
++++ b/src/media/video/v4l2/Makefile.am
+@@ -0,0 +1,23 @@
++noinst_LTLIBRARIES += libv4l2.la
++
++libv4l2_la_SOURCES = \
++	./media/video/v4l2/video_device_impl.cpp \
++	./media/video/v4l2/video_device_monitor_impl.cpp
++
++libv4l2_la_AM_CXXFLAGS = \
++	@LIBAVCODEC_CFLAGS@ \
++	@LIBAVFORMAT_CFLAGS@ \
++	@LIBAVDEVICE_CFLAGS@ \
++	@LIBSWSCALE_CFLAGS@ \
++	@LIBAVUTIL_CFLAGS@ \
++	@UDEV_CFLAGS@
++
++libv4l2_la_LIBADD = \
++	@LIBAVCODEC_LIBS@ \
++	@LIBAVFORMAT_LIBS@ \
++	@LIBAVDEVICE_LIBS@ \
++	@LIBSWSCALE_LIBS@ \
++	@LIBAVUTIL_LIBS@ \
++	@UDEV_LIBS@
++
++libvideo_la_LIBADD += libv4l2.la
+diff --git a/src/media/video/winvideo/Makefile.am b/src/media/video/winvideo/Makefile.am
+new file mode 100644
+index 000000000..92c155a30
+--- /dev/null
++++ b/src/media/video/winvideo/Makefile.am
+@@ -0,0 +1,11 @@
++noinst_LTLIBRARIES += libwinvideo.la
++
++libwinvideo_la_SOURCES = \
++	./media/video/winvideo/video_device_impl.cpp \
++	./media/video/winvideo/video_device_monitor_impl.cpp
++
++libwinvideo_la_AM_OBJCXXFLAGS = -std=c++11
++
++libwinvideo_la_LIBADD = -ldxguid -lole32 -luuid -lstrmiids -loleaut32 -lgdi32
++
++libvideo_la_LIBADD += libwinvideo.la
+diff --git a/src/plugin/Makefile.am b/src/plugin/Makefile.am
+new file mode 100644
+index 000000000..2bb486bf2
+--- /dev/null
++++ b/src/plugin/Makefile.am
+@@ -0,0 +1,35 @@
++if ENABLE_PLUGIN
++
++noinst_LTLIBRARIES += libplugin.la
++
++noinst_HEADERS += \
++	./plugin/preferenceservicesmanager.h \
++	./plugin/callservicesmanager.h \
++	./plugin/preferencehandler.h \
++	./plugin/chathandler.h \
++	./plugin/chatservicesmanager.h \
++	./plugin/webviewservicesmanager.h \
++	./plugin/webviewhandler.h \
++	./plugin/jamiplugin.h \
++	./plugin/jamipluginmanager.h \
++	./plugin/mediahandler.h \
++	./plugin/pluginloader.h \
++	./plugin/pluginmanager.h \
++	./plugin/pluginpreferencesutils.h \
++	./plugin/streamdata.h \
++	./plugin/pluginsutils.h
++
++libplugin_la_SOURCES = \
++	./plugin/jamipluginmanager.cpp \
++	./plugin/pluginloader.cpp \
++	./plugin/pluginmanager.cpp \
++	./plugin/pluginpreferencesutils.cpp \
++	./plugin/pluginsutils.cpp \
++	./plugin/chatservicesmanager.cpp \
++	./plugin/webviewservicesmanager.cpp \
++	./plugin/callservicesmanager.cpp \
++	./plugin/preferenceservicesmanager.cpp
++
++libjami_la_LIBADD += libplugin.la
++
++endif
+diff --git a/src/sip/Makefile.am b/src/sip/Makefile.am
+new file mode 100644
+index 000000000..51a03797f
+--- /dev/null
++++ b/src/sip/Makefile.am
+@@ -0,0 +1,31 @@
++noinst_LTLIBRARIES += libsiplink.la
++
++libsiplink_la_CXXFLAGS = -I$(top_srcdir)/src $(AM_CXXFLAGS)
++
++libsiplink_la_SOURCES = \
++	./sip/sipaccountbase.cpp \
++	./sip/sdp.cpp \
++	./sip/sipaccount.cpp \
++	./sip/sipcall.cpp \
++	./sip/sipvoiplink.cpp \
++	./sip/siptransport.cpp \
++	./sip/sipaccountbase.h \
++	./sip/sipaccountbase_config.h \
++	./sip/sipaccountbase_config.cpp \
++	./sip/sipaccount_config.h \
++	./sip/sipaccount_config.cpp \
++	./sip/sdp.h \
++	./sip/sipaccount.h \
++	./sip/sipcall.h \
++	./sip/sipvoiplink.h \
++	./sip/siptransport.h \
++	./sip/sippresence.cpp \
++	./sip/sippresence.h \
++	./sip/pres_sub_server.cpp\
++	./sip/pres_sub_server.h\
++	./sip/pres_sub_client.cpp\
++	./sip/pres_sub_client.h \
++	./sip/sdes_negotiator.cpp \
++	./sip/sdes_negotiator.h
++
++libjami_la_LIBADD += libsiplink.la
+diff --git a/test/Makefile.am b/test/Makefile.am
+new file mode 100644
+index 000000000..ce5d4e7eb
+--- /dev/null
++++ b/test/Makefile.am
+@@ -0,0 +1,9 @@
++SUBDIRS = unitTest
++SUBDIRS += sip
++if ENABLE_FUZZING
++SUBDIRS += fuzzing
++endif
++
++if ENABLE_AGENT
++SUBDIRS += agent
++endif
+diff --git a/test/agent/Makefile.am b/test/agent/Makefile.am
+new file mode 100644
+index 000000000..bd92e88da
+--- /dev/null
++++ b/test/agent/Makefile.am
+@@ -0,0 +1,53 @@
++include $(top_srcdir)/globals.mk
++
++AM_CXXFLAGS += -I$(top_srcdir)/src -I./src $(GUILE_CFLAGS)
++AM_LDFLAGS  += $(GUILE_LIBS)
++
++# This wrapper is necessary because Guile is not compiled with ASAN.  If however
++# we're using the agent with -fsanitize=address, and just run guile, then
++# everything will goes haywire.  Thus, just compile a minimal wrapper with the
++# same flags passed while configuring so that we can overcome this.
++noinst_PROGRAMS = guile-wrapper
++
++guile_wrapper_SOURCES = build-aux/guile-wrapper.cpp
++
++lib_LTLIBRARIES = libguile-jami.la
++
++libguile_jami_la_SOURCES =          \
++	src/main.cpp                \
++	src/utils.h                 \
++	src/bindings/jami.h         \
++	src/bindings/bindings.cpp   \
++	src/bindings/bindings.h     \
++	src/bindings/account.h      \
++	src/bindings/call.h         \
++	src/bindings/conversation.h \
++	src/bindings/signal.cpp     \
++	src/bindings/signal.h
++
++libguile_jami_la_LIBADD = $(top_builddir)/src/libjami.la
++
++MODULES =                                       \
++	agent.scm                               \
++	examples/active-agent.scm               \
++	examples/passive-agent.scm              \
++	jami.scm                                \
++	jami/account.scm                        \
++	jami/call.scm                           \
++	jami/conversation.scm                   \
++	jami/logger.scm                         \
++	jami/signal.scm                         \
++	scenarios/bulk-calls/scenario.scm       \
++	scenarios/peer-monitor/scenario.scm
++
++GOBJECTS = $(MODULES:%.scm=%.go)
++
++%.go: %.scm
++	@echo '  GUILD ' $^
++	@ASAN_OPTIONS=alloc_dealloc_mismatch=0:detect_leaks=0 \
++	./pre-inst-env guile-wrapper --no-auto-compile -e main -s build-aux/compile-scheme.scm $^ $@
++
++
++compile: $(GOBJECTS)
++
++CLEANFILES = $(GOBJECTS)
+diff --git a/test/fuzzing/Makefile.am b/test/fuzzing/Makefile.am
+new file mode 100644
+index 000000000..3208e68e6
+--- /dev/null
++++ b/test/fuzzing/Makefile.am
+@@ -0,0 +1,23 @@
++include $(top_srcdir)/globals.mk
++
++if ENABLE_FUZZING
++
++%.cpp: %.ll
++	flex --outfile $@ $^
++
++AM_CXXFLAGS += -I$(top_srcdir)/src -I. -include common.h
++AM_LDFLAGS += $(top_builddir)/src/libjami.la
++check_PROGRAMS =
++
++lib_LTLIBRARIES = libfuzz.la
++
++libfuzz_la_SOURCES = lib/utils.cpp lib/supervisor.cpp lib/gnutls.cpp lib/rand.cpp lib/syslog.cpp lib/sip-fmt.cpp lib/sip-parser.cpp
++
++check_PROGRAMS += fuzz_spam_channel_creation
++fuzz_spam_channel_creation_SOURCES = fuzz-spam-channel-creation.cpp
++fuzz_spam_channel_creation_LDADD = libfuzz.la
++
++check_PROGRAMS += fuzz_msgpack
++fuzz_msgpack_SOURCES = fuzz-msgpack.cpp
++fuzz_msgpack_LDADD = libfuzz.la
++endif
+diff --git a/test/sip/Makefile.am b/test/sip/Makefile.am
+new file mode 100644
+index 000000000..bdb5e3f30
+--- /dev/null
++++ b/test/sip/Makefile.am
+@@ -0,0 +1,10 @@
++# Rules for the test code (use `make check` to execute)
++include $(top_srcdir)/globals.mk
++
++AM_CXXFLAGS += -I$(top_srcdir)/src
++AM_LDFLAGS += $(CPPUNIT_LIBS) $(top_builddir)/src/libjami.la -static
++
++check_PROGRAMS = ut_sip
++ut_sip_SOURCES = sip.cpp test_SIP.h test_SIP.cpp
++
++TESTS = $(check_PROGRAMS)
+diff --git a/test/unitTest/Makefile.am b/test/unitTest/Makefile.am
+new file mode 100644
+index 000000000..c5359a3f5
+--- /dev/null
++++ b/test/unitTest/Makefile.am
+@@ -0,0 +1,273 @@
++# Rules for the test code (use `make check` to execute)
++include $(top_srcdir)/globals.mk
++
++AM_TESTS_ENVIRONMENT =                    \
++	. $(top_srcdir)/test/test-env.sh; \
++	echo RUNNING: "$$f";
++
++# The unit tests require hidden symbols.  Thus, we link the tests
++# against a static version of libjami instead.
++AM_CXXFLAGS += -I$(top_srcdir)/src
++AM_LDFLAGS += $(CPPUNIT_LIBS) $(top_builddir)/src/libjami.la -static
++check_PROGRAMS =
++
++####### Unit Test ########
++
++#
++# account_factory
++#
++check_PROGRAMS += ut_account_factory
++ut_account_factory_SOURCES = account_factory/testAccount_factory.cpp common.cpp
++
++#
++# account_archive
++#
++check_PROGRAMS += ut_account_archive
++ut_account_archive_SOURCES = account_archive/account_archive.cpp common.cpp
++
++#
++# migration
++#
++check_PROGRAMS += ut_migration
++ut_migration_SOURCES = account_archive/migration.cpp common.cpp
++
++#
++# scheduler
++#
++check_PROGRAMS += ut_scheduler
++ut_scheduler_SOURCES = scheduler.cpp common.cpp
++
++#
++# base64
++#
++check_PROGRAMS += ut_base64
++ut_base64_SOURCES = base64/base64.cpp common.cpp
++
++#
++# fileutils
++#
++check_PROGRAMS += ut_fileutils
++ut_fileutils_SOURCES = fileutils/testFileutils.cpp common.cpp
++
++#
++# utf8_utils
++#
++check_PROGRAMS += ut_utf8_utils
++ut_utf8_utils_SOURCES = utf8_utils/testUtf8_utils.cpp common.cpp
++
++#
++# string_utils
++#
++check_PROGRAMS += ut_string_utils
++ut_string_utils_SOURCES = string_utils/testString_utils.cpp common.cpp
++
++#
++# video_input
++#
++check_PROGRAMS += ut_video_input
++ut_video_input_SOURCES = media/video/testVideo_input.cpp common.cpp
++
++#
++# media_encoder
++#
++check_PROGRAMS += ut_media_encoder
++ut_media_encoder_SOURCES = media/test_media_encoder.cpp common.cpp
++
++#
++# media_decoder
++#
++check_PROGRAMS += ut_media_decoder
++ut_media_decoder_SOURCES = media/test_media_decoder.cpp common.cpp
++
++#
++# media_filter
++#
++check_PROGRAMS += ut_media_filter
++ut_media_filter_SOURCES = media/test_media_filter.cpp common.cpp
++
++#
++# media_player
++#
++check_PROGRAMS += ut_media_player
++ut_media_player_SOURCES = media/test_media_player.cpp common.cpp
++
++#
++# resampler
++#
++check_PROGRAMS += ut_resampler
++ut_resampler_SOURCES = media/audio/test_resampler.cpp common.cpp
++
++#
++# media_frame
++#
++check_PROGRAMS += ut_media_frame
++ut_media_frame_SOURCES = media/test_media_frame.cpp common.cpp
++
++#
++# video_scaler
++#
++check_PROGRAMS += ut_video_scaler
++ut_video_scaler_SOURCES = media/video/test_video_scaler.cpp common.cpp
++
++#
++# audio_frame_resizer
++#
++check_PROGRAMS += ut_audio_frame_resizer
++ut_audio_frame_resizer_SOURCES = media/audio/test_audio_frame_resizer.cpp common.cpp
++
++#
++# call
++#
++check_PROGRAMS += ut_call
++ut_call_SOURCES = call/call.cpp common.cpp
++
++#
++# SIPcall
++#
++check_PROGRAMS += ut_sipcall
++ut_sipcall_SOURCES = call/sipcall.cpp common.cpp
++
++#
++# recorder
++#
++check_PROGRAMS += ut_recorder
++ut_recorder_SOURCES = call/recorder.cpp common.cpp
++
++#
++# conference
++#
++check_PROGRAMS += ut_conference
++ut_conference_SOURCES = call/conference.cpp common.cpp
++
++#
++# fileTransfer
++#
++check_PROGRAMS += ut_fileTransfer
++ut_fileTransfer_SOURCES = fileTransfer/fileTransfer.cpp common.cpp
++
++# conversationRepository
++#
++check_PROGRAMS += ut_conversationRepository
++ut_conversationRepository_SOURCES = conversationRepository/conversationRepository.cpp common.cpp
++
++#
++# conversation
++#
++check_PROGRAMS += ut_conversation
++ut_conversation_SOURCES = conversation/conversationcommon.cpp conversation/conversation.cpp common.cpp
++
++#
++# conversation_call
++#
++check_PROGRAMS += ut_conversation_call
++ut_conversation_call_SOURCES = conversation/conversationcommon.cpp conversation/call.cpp common.cpp
++
++#
++# conversation_fetch_sent
++#
++check_PROGRAMS += ut_conversation_fetch_sent
++ut_conversation_fetch_sent_SOURCES = conversation/conversationcommon.cpp conversation/conversationFetchSent.cpp common.cpp
++
++#
++# media_negotiation
++#
++check_PROGRAMS += ut_media_negotiation
++ut_media_negotiation_SOURCES = media_negotiation/media_negotiation.cpp common.cpp
++
++check_PROGRAMS += ut_hold_resume
++ut_hold_resume_SOURCES = media_negotiation/hold_resume.cpp common.cpp
++
++check_PROGRAMS += ut_auto_answer
++ut_auto_answer_SOURCES = media_negotiation/auto_answer.cpp common.cpp
++
++#
++# conversationRequest
++#
++check_PROGRAMS += ut_conversationRequest
++ut_conversationRequest_SOURCES = conversation/conversationRequest.cpp common.cpp
++
++#
++# conversationMembersEvent
++#
++check_PROGRAMS += ut_conversationMembersEvent
++ut_conversationMembersEvent_SOURCES = conversation/conversationMembersEvent.cpp conversation/conversationcommon.cpp common.cpp
++
++#
++# typers
++#
++check_PROGRAMS += ut_typers
++ut_typers_SOURCES = conversation/typers.cpp conversation/conversationcommon.cpp common.cpp
++
++#
++# syncHistory
++#
++check_PROGRAMS += ut_syncHistory
++ut_syncHistory_SOURCES = syncHistory/syncHistory.cpp common.cpp
++
++
++#
++# revoke
++#
++check_PROGRAMS += ut_revoke
++ut_revoke_SOURCES = revoke/revoke.cpp common.cpp
++
++check_PROGRAMS += ut_ice_sdp_parser
++ut_ice_sdp_parser_SOURCES = ice/ice_sdp_parser.cpp common.cpp
++
++#
++# Calls using SIP accounts
++#
++check_PROGRAMS += ut_sip_basic_calls
++ut_sip_basic_calls_SOURCES = sip_account/sip_basic_calls.cpp
++
++check_PROGRAMS += ut_sip_srtp
++ut_sip_srtp_SOURCES = sip_account/sip_srtp.cpp
++
++#
++# Plugins
++#
++check_PROGRAMS += ut_plugins
++ut_plugins_SOURCES = plugins/plugins.cpp common.cpp
++
++#
++# Routing Table
++#
++check_PROGRAMS += ut_routing_table
++ut_routing_table_SOURCES = swarm/routing_table.cpp
++
++#
++# Bootstrap
++#
++check_PROGRAMS += ut_bootstrap
++ut_bootstrap_SOURCES = swarm/bootstrap.cpp common.cpp
++
++#
++# SwarmConversation
++#
++check_PROGRAMS += ut_swarm_conversation
++ut_swarm_conversation_SOURCES = swarm/swarm_conversation.cpp common.cpp
++
++#
++# SwarmSpreadTest
++#
++check_PROGRAMS += ut_swarm_spread
++ut_swarm_spread_SOURCES = swarm/swarm_spread.cpp common.cpp
++
++#
++# namedirectory
++#
++check_PROGRAMS += ut_namedirectory
++ut_namedirectory_SOURCES = namedirectory/namedirectory.cpp common.cpp
++
++#
++# presence
++#
++check_PROGRAMS += ut_presence
++ut_presence_SOURCES = presence/presence.cpp common.cpp
++
++# linkdevice
++#
++check_PROGRAMS += ut_linkdevice
++ut_linkdevice_SOURCES = linkdevice/linkdevice.cpp common.cpp
++
++TESTS = $(check_PROGRAMS)
