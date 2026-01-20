@@ -3,7 +3,7 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-JAMI_QT_REV = "8b6071e52f962940a554d7713ed5e948c5472ede"
+JAMI_QT_REV = "9145a9cb6f946ddf77c57f63d9d9061a2af62329"
 JAMI_URI = "gitsm://review.jami.net"
 JAMI_PROT = "protocol=https;nobranch=1"
 

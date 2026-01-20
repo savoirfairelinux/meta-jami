@@ -26,10 +26,10 @@ Upstream-Status: Inappropriate [oe specific]
  1 file changed, 3 insertions(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aa9e5bc8..e16e44a8 100644
+index 2565ab90..084a9ec2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -555,6 +555,9 @@ elseif (NOT APPLE)
+@@ -564,6 +564,9 @@ elseif (NOT APPLE)
      add_definitions(${LIBGDKPIXBUF_CFLAGS})
    endif()
  
