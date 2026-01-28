@@ -11,6 +11,7 @@ SRC_URI = " \
     ${JAMI_URI}/jami-client-qt;${JAMI_PROT};rev=${JAMI_QT_REV} \
     file://0002-CMakeLists.txt-explicitly-link-to-libavutil.patch \
     file://0001-CMakeLists.txt-do-not-build-qwindowkit-dependency-du.patch \
+    file://0003-video-add-passthrough-preference.patch \
 "
 
 S = "${WORKDIR}/git"

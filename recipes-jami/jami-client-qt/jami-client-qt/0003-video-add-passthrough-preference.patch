@@ -1,0 +1,147 @@
+From 2c8217aea7f32ef3be679e5e4b850bada6c4e87c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Adrien=20B=C3=A9raud?= <adrien.beraud@savoirfairelinux.com>
+Date: Tue, 20 Jan 2026 16:27:16 -0500
+Subject: [PATCH] video: add passthrough preference
+
+Upstream-Status: Pending
+---
+ src/app/net/jami/Constants/JamiStrings.qml         |  1 +
+ .../settingsview/components/VideoSettingsPage.qml  | 14 ++++++++++++++
+ src/app/videodevices.cpp                           | 12 ++++++++++++
+ src/app/videodevices.h                             |  2 ++
+ src/libclient/api/video.h                          |  1 +
+ src/libclient/avmodel.cpp                          |  6 +++---
+ 6 files changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/src/app/net/jami/Constants/JamiStrings.qml b/src/app/net/jami/Constants/JamiStrings.qml
+index d79823f0..dc50f0f3 100644
+--- a/src/app/net/jami/Constants/JamiStrings.qml
++++ b/src/app/net/jami/Constants/JamiStrings.qml
+@@ -227,6 +227,7 @@ Item {
+     property string fps: qsTr("Frames per second")
+     property string selectFPS: qsTr("Select video frame rate (frames per second)")
+     property string enableHWAccel: qsTr("Enable hardware acceleration")
++    property string passthrough: qsTr("Enable passthrough mode")
+     property string mirrorLocalVideo: qsTr("Mirror local video")
+     property string screenSharing: qsTr("Screen sharing")
+     property string selectScreenSharingFPS: qsTr("Select screen sharing frame rate (frames per second)")
+diff --git a/src/app/settingsview/components/VideoSettingsPage.qml b/src/app/settingsview/components/VideoSettingsPage.qml
+index 49ad109a..4521810e 100644
+--- a/src/app/settingsview/components/VideoSettingsPage.qml
++++ b/src/app/settingsview/components/VideoSettingsPage.qml
+@@ -240,5 +240,19 @@ SettingsPageBase {
+                 rootLayout.startPreviewing(true);
+             }
+         }
++
++        ToggleSwitch {
++            id: passthroughControl
++
++            Layout.fillWidth: true
++
++            labelText: JamiStrings.passthrough
++            checked: VideoDevices.isPassthrough
++
++            onSwitchToggled: {
++                VideoDevices.setIsPassthrough(checked);
++                rootLayout.startPreviewing(true);
++            }
++        }
+     }
+ }
+diff --git a/src/app/videodevices.cpp b/src/app/videodevices.cpp
+index 1f126ecb..4f352738 100644
+--- a/src/app/videodevices.cpp
++++ b/src/app/videodevices.cpp
+@@ -289,6 +289,17 @@ VideoDevices::setDefaultDeviceFps(int index)
+     updateData();
+ }
+ 
++void
++VideoDevices::setIsPassthrough(bool passthrough)
++{
++    auto settings = lrcInstance_->avModel().getDeviceSettings(get_defaultId());
++    settings.passthrough = passthrough;
++
++    lrcInstance_->avModel().setDeviceSettings(settings);
++
++    updateData();
++}
++
+ void
+ VideoDevices::setDisplayFPS(const QString& fps)
+ {
+@@ -321,6 +332,7 @@ VideoDevices::updateData()
+         set_defaultId(defaultDeviceSettings.id);
+         set_defaultName(defaultDeviceSettings.name);
+         set_defaultRes(defaultDeviceSettings.size);
++        set_isPassthrough(defaultDeviceSettings.passthrough);
+         set_defaultFps(defaultDeviceSettings.rate);
+         set_defaultResRateList(currentResRateList);
+         set_defaultFpsList(fpsList);
+diff --git a/src/app/videodevices.h b/src/app/videodevices.h
+index 6f59f2a3..426a8dec 100644
+--- a/src/app/videodevices.h
++++ b/src/app/videodevices.h
+@@ -122,6 +122,7 @@ class VideoDevices : public QObject
+     QML_RO_PROPERTY(QString, defaultId)
+     QML_RO_PROPERTY(QString, defaultName)
+     QML_RO_PROPERTY(QString, defaultRes)
++    QML_RO_PROPERTY(bool, isPassthrough)
+     QML_RO_PROPERTY(int, defaultFps)
+     QML_PROPERTY(int, screenSharingDefaultFps)
+ 
+@@ -145,6 +146,7 @@ public:
+     Q_INVOKABLE void stopDevice(const QString& deviceId);
+     Q_INVOKABLE void setDefaultDeviceRes(int index);
+     Q_INVOKABLE void setDefaultDeviceFps(int index);
++    Q_INVOKABLE void setIsPassthrough(bool passthrough);
+     Q_INVOKABLE void setDisplayFPS(const QString& fps);
+ 
+     const lrc::api::video::ResRateList& get_defaultResRateList();
+diff --git a/src/libclient/api/video.h b/src/libclient/api/video.h
+index 867c20a4..4b22ec3e 100644
+--- a/src/libclient/api/video.h
++++ b/src/libclient/api/video.h
+@@ -73,6 +73,7 @@ struct Settings
+     QString id = "";
+     Framerate rate = 0;
+     Resolution size = "";
++    bool passthrough = false;
+ };
+ } // namespace video
+ } // namespace api
+diff --git a/src/libclient/avmodel.cpp b/src/libclient/avmodel.cpp
+index b2aea928..66c32aa3 100644
+--- a/src/libclient/avmodel.cpp
++++ b/src/libclient/avmodel.cpp
+@@ -283,6 +283,7 @@ AVModel::getDeviceSettings(const QString& deviceId) const
+     result.channel = settings["channel"];
+     result.size = settings["size"];
+     result.rate = settings["rate"].toFloat();
++    result.passthrough = settings["passthrough"] == "true";
+     return result;
+ }
+ 
+@@ -328,6 +329,7 @@ AVModel::setDeviceSettings(video::Settings& settings)
+     newSettings["id"] = settings.id;
+     newSettings["rate"] = rate;
+     newSettings["size"] = settings.size;
++    newSettings["passthrough"] = settings.passthrough ? "true" : "false";
+     VideoManager::instance().applySettings(settings.id, newSettings);
+ 
+     // If the preview is running, reload it
+@@ -740,9 +742,7 @@ AVModel::getListWindows() const
+             for (int i = 0; i < valueLegth / 4; i++) {
+                 xcb_get_property_cookie_t prop_cookie
+                     = xcb_get_property(c.get(), 0, win[i], atomWMVisibleName, XCB_GET_PROPERTY_TYPE_ANY, 0, 1000);
+-                propertyPtr replyProp {xcb_get_property_reply(c.get(), prop_cookie, &e), [](auto* ptr) {
+-                                           free(ptr);
+-                                       }};
++                propertyPtr replyProp {xcb_get_property_reply(c.get(), prop_cookie, &e), [](auto* ptr) { free(ptr); }};
+                 if (e) {
+                     LC_DBG << "Error: " << e->error_code;
+                     free(e);
+-- 
+2.34.1
+
