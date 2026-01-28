@@ -1,0 +1,181 @@
+From d47870c6c0e7b32843549d5b5d3d046f9c5d5cc1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Adrien=20B=C3=A9raud?= <adrien.beraud@savoirfairelinux.com>
+Date: Tue, 20 Jan 2026 13:51:10 -0500
+Subject: [PATCH 1/2] media: add passthough mode
+
+Upstream-Status: Pending
+---
+ src/media/media_decoder.cpp    | 19 +++++++++++++++++++
+ src/media/media_decoder.h      |  1 +
+ src/media/media_device.h       |  1 +
+ src/media/media_encoder.cpp    |  8 ++++++++
+ src/media/video/video_base.cpp | 20 ++++++++++++++------
+ src/media/video/video_base.h   |  1 +
+ src/media/video/video_device.h |  2 ++
+ 7 files changed, 46 insertions(+), 6 deletions(-)
+
+diff --git a/src/media/media_decoder.cpp b/src/media/media_decoder.cpp
+index 57c8d90cc..0896dc2ae 100644
+--- a/src/media/media_decoder.cpp
++++ b/src/media/media_decoder.cpp
+@@ -482,6 +482,7 @@ MediaDecoder::flushBuffers()
+ int
+ MediaDecoder::openInput(const DeviceParams& p)
+ {
++    passthrough_ = p.passthrough;
+     return demuxer_->openInput(p);
+ }
+ 
+@@ -635,6 +636,24 @@ MediaDecoder::updateStartTime(int64_t startTime)
+ DecodeStatus
+ MediaDecoder::decode(AVPacket& packet)
+ {
++    if (inputDecoder_->type == AVMEDIA_TYPE_VIDEO && passthrough_) {
++#ifdef ENABLE_VIDEO
++        // If passthrough, we don't decode, just pass the packet
++        auto f = std::static_pointer_cast<MediaFrame>(std::make_shared<VideoFrame>());
++        if (auto p = av_packet_clone(&packet)) {
++            f->setPacket(libjami::PacketBuffer(p));
++        }
++        if (callback_)
++            callback_(std::move(f));
++
++        if (contextCallback_ && firstDecode_.load()) {
++            firstDecode_.exchange(false);
++            contextCallback_();
++        }
++        return DecodeStatus::FrameFinished;
++#endif
++    }
++
+     int frameFinished = 0;
+     auto ret = avcodec_send_packet(decoderCtx_, &packet);
+     // TODO: Investigate avcodec_send_packet returning AVERROR_INVALIDDATA.
+diff --git a/src/media/media_decoder.h b/src/media/media_decoder.h
+index f2c84e106..40cc94a81 100644
+--- a/src/media/media_decoder.h
++++ b/src/media/media_decoder.h
+@@ -214,6 +214,7 @@ private:
+     AVCodecContext* decoderCtx_ = nullptr;
+     AVStream* avStream_ = nullptr;
+     bool emulateRate_ = false;
++    bool passthrough_ = false;
+     int64_t startTime_;
+     int64_t lastTimestamp_ {0};
+ 
+diff --git a/src/media/media_device.h b/src/media/media_device.h
+index 48b0a911c..ee9622631 100644
+--- a/src/media/media_device.h
++++ b/src/media/media_device.h
+@@ -54,6 +54,7 @@ struct DeviceParams
+     int is_area {};
+     // Skip DTS delay while finding stream info when PTS is sufficient
+     bool disable_dts_probe_delay = false;
++    bool passthrough {false};
+ };
+ 
+ } // namespace jami
+diff --git a/src/media/media_encoder.cpp b/src/media/media_encoder.cpp
+index f0d4c6757..53fa5182d 100644
+--- a/src/media/media_encoder.cpp
++++ b/src/media/media_encoder.cpp
+@@ -402,6 +402,14 @@ MediaEncoder::startIO()
+ int
+ MediaEncoder::encode(const std::shared_ptr<VideoFrame>& input, bool is_keyframe, int64_t frame_number)
+ {
++    if (auto pkt = input->packet()) {
++        if (!initialized_) {
++            currentStreamIdx_ = initStream(videoCodec_);
++            startIO();
++        }
++        return send(*pkt, -1) ? 0 : -1;
++    }
++
+     auto width = (input->width() >> 3) << 3;
+     auto height = (input->height() >> 3) << 3;
+     if (initialized_ && (getWidth() != width || getHeight() != height)) {
+diff --git a/src/media/video/video_base.cpp b/src/media/video/video_base.cpp
+index 2a8f87a28..fee9fae98 100644
+--- a/src/media/video/video_base.cpp
++++ b/src/media/video/video_base.cpp
+@@ -89,17 +89,22 @@ VideoSettings::VideoSettings(const std::map<std::string, std::string>& settings)
+     channel = extractString(settings, "channel");
+     video_size = extractString(settings, "size");
+     framerate = extractString(settings, "rate");
++    auto n = extractString(settings, "passthrough");
++    passthrough = n == "true" || n == "1";
+ }
+ 
+ std::map<std::string, std::string>
+ VideoSettings::to_map() const
+ {
+-    return {{"name", name},
+-            {"id", unique_id},
+-            {"input", input},
+-            {"size", video_size},
+-            {"channel", channel},
+-            {"rate", framerate}};
++    return {
++        {"name",        name                          },
++        {"id",          unique_id                     },
++        {"input",       input                         },
++        {"size",        video_size                    },
++        {"channel",     channel                       },
++        {"rate",        framerate                     },
++        {"passthrough", passthrough ? "true" : "false"}
++    };
+ }
+ 
+ } // namespace video
+@@ -117,6 +122,7 @@ convert<jami::video::VideoSettings>::encode(const jami::video::VideoSettings& rh
+     node["video_size"] = rhs.video_size;
+     node["channel"] = rhs.channel;
+     node["framerate"] = rhs.framerate;
++    node["passthrough"] = rhs.passthrough;
+     return node;
+ }
+ 
+@@ -133,6 +139,8 @@ convert<jami::video::VideoSettings>::decode(const Node& node, jami::video::Video
+     rhs.video_size = node["video_size"].as<std::string>();
+     rhs.channel = node["channel"].as<std::string>();
+     rhs.framerate = node["framerate"].as<std::string>();
++    if (node["passthrough"])
++        rhs.passthrough = node["passthrough"].as<bool>();
+     return true;
+ }
+ 
+diff --git a/src/media/video/video_base.h b/src/media/video/video_base.h
+index fb0cdadd3..566464d37 100644
+--- a/src/media/video/video_base.h
++++ b/src/media/video/video_base.h
+@@ -100,6 +100,7 @@ struct VideoSettings
+     std::string channel {};
+     std::string video_size {};
+     std::string framerate {};
++    bool passthrough {false};
+ };
+ 
+ } // namespace video
+diff --git a/src/media/video/video_device.h b/src/media/video/video_device.h
+index 47736568a..ef0e40747 100644
+--- a/src/media/video/video_device.h
++++ b/src/media/video/video_device.h
+@@ -142,6 +142,7 @@ public:
+         settings.channel = params.channel_name;
+         settings.video_size = sizeToString(params.width, params.height);
+         settings.framerate = jami::to_string(params.framerate.real());
++        settings.passthrough = params.passthrough;
+         return settings;
+     }
+ 
+@@ -163,6 +164,7 @@ public:
+         params.width = size.first;
+         params.height = size.second;
+         params.framerate = rateFromString(settings.channel, size, settings.framerate);
++        params.passthrough = settings.passthrough;
+         setDeviceParams(params);
+     }
+ 
+-- 
+2.34.1
+

@@ -12,6 +12,8 @@ SRC_URI = " \
         file://0001-Revert-cleanup-remove-autotools.patch \
         file://0001-Makefile.am-disable-man-pages-generation.patch \
         file://0002-configure.ac-reset-flags-only-if-building-contrib-di.patch \
+        file://0003-media-add-passthough-mode.patch \
+        file://0004-v4l2-support-passthough-mode.patch \
 "
 
 S = "${WORKDIR}/git"
