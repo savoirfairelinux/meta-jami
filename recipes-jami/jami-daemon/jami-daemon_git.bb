@@ -14,6 +14,7 @@ SRC_URI = " \
         file://0002-configure.ac-reset-flags-only-if-building-contrib-di.patch \
         file://0003-media-add-passthough-mode.patch \
         file://0004-v4l2-support-passthough-mode.patch \
+        file://0005-media_decoder-use-default-channel-order-if-not-set.patch \
 "
 
 S = "${WORKDIR}/git"

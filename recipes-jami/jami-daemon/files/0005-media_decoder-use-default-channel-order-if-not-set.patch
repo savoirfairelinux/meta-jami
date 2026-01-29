@@ -1,0 +1,33 @@
+From 43eba331143ec852007172c47f5c633e8eb3bca9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Fran=C3=A7ois-Simon=20Fauteux-Chapleau?=
+ <francois-simon.fauteux-chapleau@savoirfairelinux.com>
+Date: Wed, 28 Jan 2026 15:52:02 -0500
+Subject: [PATCH] media_decoder: use default channel order if not set
+
+Upstream-Status: Pending
+---
+ src/media/media_decoder.cpp | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/media/media_decoder.cpp b/src/media/media_decoder.cpp
+index 0896dc2ae..b8e35e318 100644
+--- a/src/media/media_decoder.cpp
++++ b/src/media/media_decoder.cpp
+@@ -713,8 +713,13 @@ MediaDecoder::decode(AVPacket& packet)
+         frameFinished = 1;
+ 
+     if (frameFinished) {
+-        if (inputDecoder_->type == AVMEDIA_TYPE_VIDEO)
++        if (inputDecoder_->type == AVMEDIA_TYPE_VIDEO) {
+             frame->format = (AVPixelFormat) correctPixFmt(frame->format);
++        } else {
++            if (frame->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC) {
++                av_channel_layout_default(&frame->ch_layout, frame->ch_layout.nb_channels);
++            }
++        }
+         auto packetTimestamp = frame->pts; // in stream time base
+         frame->pts = av_rescale_q_rnd(av_gettime() - startTime_,
+                                       {1, AV_TIME_BASE},
+-- 
+2.34.1
+
